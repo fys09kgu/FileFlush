@@ -20,6 +20,7 @@ public class DownloadThread extends Thread {
 			byte[] buffer = new byte[8192];
 			int dataLength = 0;
 			while((dataLength = in.read(buffer, 0, buffer.length)) > 0) {
+				System.out.println("Inne i skrivarloopen, datalength är " + dataLength);
 				out.write(buffer, 0, dataLength);
 			}
 			out.flush();

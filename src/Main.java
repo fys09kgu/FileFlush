@@ -19,7 +19,7 @@ public class Main {
 				String[] options = message.split(" ");
 				String hostName = options[0];
 				int port = Integer.parseInt(options[1]);
-				String filePath = options[3];
+				String filePath = options[2];
 				Socket socket = new Socket(hostName, port);
 				ClientThread ct = new ClientThread(socket, new File(filePath));
 				ct.start();
