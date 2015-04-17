@@ -13,39 +13,32 @@ public class DownloadThread extends Thread {
 	}
 	
 	public void run() {
+		BufferedInputStream in = null;
+		FileOutputStream out = null;
 		byte[] buffer = new byte[8192];
 		int dataLength = 0;
 		try {
-			BufferedInputStream in = new BufferedInputStream(this.socket.getInputStream());
-			int b = 0;
-			StringBuilder header = new StringBuilder();
-			int i = 0;
-			do {
-				b = in.read();
-				char c = (char) b;
-				header.append(c);
-				if (c == ';') {
-					i++;
-				}
-			} while (b != -1 && i < 2);
+			in = new BufferedInputStream(this.socket.getInputStream());
 			
-			int index = header.indexOf(";");
-			String filename = header.substring(0, index);
-			long filesize = Long.parseLong(header.substring(index + 1, header.length()-1));
-			System.out.println(String.format("Filename: %s | filesize: %d", filename, filesize));
+			Header header = new Header(in);
+			header.parse();
+			System.out.println(String.format("Filename: %s | filesize: %s",
+					header.getFilename(), header.getFilesize()));
 			
-			FileOutputStream out = new FileOutputStream(new File("testner", filename));
+			out = new FileOutputStream(new File("testner", header.getFilename()));
 			while((dataLength = in.read(buffer, 0, buffer.length)) > 0) {
 				out.write(buffer, 0, dataLength);
 			}
 			out.flush();
-			out.close();
-			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				out.close();
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
-
-	
-	
 }
