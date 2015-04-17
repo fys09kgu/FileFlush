@@ -23,8 +23,11 @@ public class ClientThread extends Thread {
 		try {
 			is = socket.getInputStream();
 			os = new BufferedOutputStream(socket.getOutputStream());
-			BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
 			
+			String header = String.format("%s;%s;", file.getName(), file.length());
+			os.write(header.getBytes());
+			
+			BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
 			int count;
 			while ((count = fis.read(buffer)) > 0){
 				os.write(buffer, 0, count);

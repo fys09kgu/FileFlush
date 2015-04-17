@@ -13,14 +13,29 @@ public class DownloadThread extends Thread {
 	}
 	
 	public void run() {
+		byte[] buffer = new byte[8192];
+		int dataLength = 0;
 		try {
 			BufferedInputStream in = new BufferedInputStream(this.socket.getInputStream());
-			File file = new File("test.txt");
-			FileOutputStream out = new FileOutputStream(file);
-			byte[] buffer = new byte[8192];
-			int dataLength = 0;
+			int b = 0;
+			StringBuilder header = new StringBuilder();
+			int i = 0;
+			do {
+				b = in.read();
+				char c = (char) b;
+				header.append(c);
+				if (c == ';') {
+					i++;
+				}
+			} while (b != -1 && i < 2);
+			
+			int index = header.indexOf(";");
+			String filename = header.substring(0, index);
+			long filesize = Long.parseLong(header.substring(index + 1, header.length()-1));
+			System.out.println(String.format("Filename: %s | filesize: %d", filename, filesize));
+			
+			FileOutputStream out = new FileOutputStream(new File("testner", filename));
 			while((dataLength = in.read(buffer, 0, buffer.length)) > 0) {
-				System.out.println("Inne i skrivarloopen, datalength är " + dataLength);
 				out.write(buffer, 0, dataLength);
 			}
 			out.flush();
