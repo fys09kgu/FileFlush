@@ -29,7 +29,7 @@ public class ClientThread extends Thread {
 			while ((count = fis.read(buffer)) > 0){
 				os.write(buffer, 0, count);
 			}
-			
+			os.flush();
 			fis.close();
 			is.close();
 			os.close();
