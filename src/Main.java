@@ -7,6 +7,7 @@ import java.net.Socket;
 public class Main {
 
     public static void main(String[] args) {
+        new GUI();
         System.out.println("Creating Server Socket");
         ServerThread server = new ServerThread();
         server.start();
