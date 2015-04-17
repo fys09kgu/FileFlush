@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class ClientThread extends Thread {
 	Socket socket;
@@ -17,18 +16,27 @@ public class ClientThread extends Thread {
 	}
 
 	public void run(){
-		InputStream is;
-		BufferedOutputStream os;
+		InputStream is = null;
+		BufferedOutputStream os = null;
+		byte[] buffer = new byte[8000];
+		
 		try {
 			is = socket.getInputStream();
 			os = new BufferedOutputStream(socket.getOutputStream());
-			BufferedInputStream fos = new BufferedInputStream(new FileInputStream(file));
+			BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
+			
+			int count;
+			while ((count = fis.read(buffer)) > 0){
+				os.write(buffer, 0, count);
+			}
+			
+			fis.close();
+			is.close();
+			os.close();
+			socket.close();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 }
