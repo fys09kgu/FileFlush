@@ -16,7 +16,8 @@ public class ServerThread extends Thread {
 				BufferedInputStream in = new BufferedInputStream(connectionSocket.getInputStream());
 
 				Header header = new Header(in);
-				int type = header.parseType();
+				header.parseHeader();
+				int type = header.getType();
 				switch (type) {
 				case Header.TYPE_FILE:
 					FileMetadata metadata = header.parseFileMetadata();
