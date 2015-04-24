@@ -24,7 +24,7 @@ public class ClientThread extends Thread {
 			is = socket.getInputStream();
 			os = new BufferedOutputStream(socket.getOutputStream());
 			
-			os.write(Header.createHeader(file.getName(), file.length()));
+			os.write(Header.createFileHeader(new FileMetadata(file.getName(), file.length())));
 			
 			BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
 			int count;

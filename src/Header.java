@@ -2,39 +2,43 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 
 public class Header {
-	private BufferedInputStream in;
+	public static final int TYPE_FILE = 0;
 	
-	private String filename;
-	private long filesize;
+	private BufferedInputStream inputStream;
 
 	public Header(BufferedInputStream in) {
-		this.in = in;
+		this.inputStream = in;
 	}
 	
-	public String getFilename() {
-		return filename;
+	public int parseType() throws IOException {
+		int b = 0;
+		char c = 0;
+		StringBuilder sb = new StringBuilder();
+		while ((b = inputStream.read()) != -1) {
+			c = (char) b;
+			if (c == ';') break;
+			sb.append(c);
+		}
+		return Integer.parseInt(sb.toString());
 	}
 
-	public long getFilesize() {
-		return filesize;
-	}
-
-	public void parse() throws IOException {
+	public FileMetadata parseFileMetadata() throws IOException {
 		int b, i = 0;
 		char c = 0;
 		StringBuilder sb = new StringBuilder();
 		do {
-			b = in.read();
+			b = inputStream.read();
 			c = (char) b;
 			sb.append(c);
 			if (c == ';') i++;
 		} while (b != -1 && i < 2);
 		int index = sb.indexOf(";");
-		this.filename = sb.substring(0, index);
-		this.filesize = Long.parseLong(sb.substring(index + 1, sb.length() - 1));
+		String filename = sb.substring(0, index);
+		long filesize = Long.parseLong(sb.substring(index + 1, sb.length() - 1));
+		return new FileMetadata(filename, filesize);
 	}
 	
-	public static byte[] createHeader(String filename, long filesize) {
-		return String.format("%s;%s;", filename, filesize).getBytes();
+	public static byte[] createFileHeader(FileMetadata metadata) {
+		return String.format("%d;%s;%s;", TYPE_FILE, metadata.getFilename(), metadata.getFilesize()).getBytes();
 	}
 }
