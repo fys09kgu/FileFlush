@@ -41,10 +41,14 @@ public class Header {
 	
 	public User parseUser() throws IOException {
 		String[] address = header[1].split(":");
-		return new User(InetAddress.getByName(address[0]), Integer.parseInt(address[1]), header[3]);
+		return new User(InetAddress.getByName(address[0]), Integer.parseInt(address[1]), header[2]);
 	}
 	
 	public static byte[] createUserHeader(User user) {
-		return String.format("%d;%s;%s\n", TYPE_USER, user.getAddress(), user.getPort(), user.getUsername()).getBytes();
+		return String.format("%d;%s;%s\n", TYPE_USER, user.getIPAddress(), user.getPort(), user.getUsername()).getBytes();
+	}
+
+	public static byte[] createFindUserHeader(User user) {
+		return String.format("%s:%s", user.getIPAddress(), user.getPort()).getBytes();
 	}
 }

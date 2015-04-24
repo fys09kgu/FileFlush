@@ -5,7 +5,7 @@ import java.net.Socket;
 
 public class ServerThread extends Thread {
 	
-	private static final int SERVER_PORT = 50000;
+	public static final int SERVER_PORT = 50000;
 	
 	private UserMonitor userMonitor;
 

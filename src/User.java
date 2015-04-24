@@ -11,8 +11,8 @@ public class User {
 		this.username = username;
 	}
 	
-	public InetAddress getAddress() {
-		return address;
+	public String getIPAddress() {
+		return address.getHostAddress();
 	}
 	
 	public int getPort() {
@@ -34,7 +34,7 @@ public class User {
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {
 			User u = (User) obj;
-			return (address.equals(u.getAddress()) && port == u.getPort());
+			return (address.equals(u.getIPAddress()) && port == u.getPort());
 		}
 		return false;
 	}
