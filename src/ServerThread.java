@@ -6,6 +6,12 @@ import java.net.Socket;
 public class ServerThread extends Thread {
 	
 	private static final int SERVER_PORT = 50000;
+	
+	private UserMonitor userMonitor;
+
+	public ServerThread(UserMonitor userMonitor) {
+		this.userMonitor = userMonitor;
+	}
 
 	public void run() {
 		ServerSocket serverIn = null;
@@ -25,6 +31,9 @@ public class ServerThread extends Thread {
 							metadata.getFilename(), metadata.getFilesize()));
 					DownloadThread downloader = new DownloadThread(metadata, in);
 					downloader.start();
+					break;
+				case Header.TYPE_USER:
+					userMonitor.addUser(header.parseUser());
 					break;
 				}
 			 }

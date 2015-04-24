@@ -8,9 +8,13 @@ public class Main {
 
     public static void main(String[] args) {
         new GUI();
+        
+        UserMonitor userMonitor = new UserMonitor();
+        
         System.out.println("Creating Server Socket");
-        ServerThread server = new ServerThread();
+        ServerThread server = new ServerThread(userMonitor);
         server.start();
+        
         System.out.println("Specify: host port filePath");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String message;
@@ -25,7 +29,6 @@ public class Main {
 				ct.start();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
