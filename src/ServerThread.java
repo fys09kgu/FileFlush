@@ -21,7 +21,6 @@ public class ServerThread extends Thread {
 			try {
 				serverIn.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
