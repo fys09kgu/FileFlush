@@ -1,40 +1,54 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 
 public class Header {
-	private BufferedInputStream in;
+	public static final int TYPE_FILE = 0;
+	public static final int TYPE_USER = 1;
 	
-	private String filename;
-	private long filesize;
+	private BufferedInputStream inputStream;
+	private String[] header;
+	private int type;
 
 	public Header(BufferedInputStream in) {
-		this.in = in;
+		this.inputStream = in;
 	}
 	
-	public String getFilename() {
-		return filename;
-	}
-
-	public long getFilesize() {
-		return filesize;
-	}
-
-	public void parse() throws IOException {
-		int b, i = 0;
+	public void parseHeader() throws IOException {
+		int b = 0;
 		char c = 0;
 		StringBuilder sb = new StringBuilder();
-		do {
-			b = in.read();
+		while ((b = inputStream.read()) != -1) {
 			c = (char) b;
+			if (c == '\n') break;
 			sb.append(c);
-			if (c == ';') i++;
-		} while (b != -1 && i < 2);
-		int index = sb.indexOf(";");
-		this.filename = sb.substring(0, index);
-		this.filesize = Long.parseLong(sb.substring(index + 1, sb.length() - 1));
+		}
+		header = sb.toString().split(";");
+		type = Integer.parseInt(header[0]);
 	}
 	
-	public static byte[] createHeader(String filename, long filesize) {
-		return String.format("%s;%s;", filename, filesize).getBytes();
+	public int getType() {
+		return type;
+	}
+
+	public FileMetadata parseFileMetadata() throws IOException {
+		return new FileMetadata(header[1], Long.parseLong(header[2]));
+	}
+	
+	public static byte[] createFileHeader(FileMetadata metadata) {
+		return String.format("%d;%s;%s\n", TYPE_FILE, metadata.getFilename(), metadata.getFilesize()).getBytes();
+	}
+	
+	public User parseUser() throws IOException {
+		String[] address = header[1].split(":");
+		return new User(InetAddress.getByName(address[0]), Integer.parseInt(address[1]), header[2]);
+	}
+	
+	public static byte[] createUserHeader(User user) {
+		return String.format("%d;%s;%s\n", TYPE_USER, user.getIPAddress(), user.getPort(), user.getUsername()).getBytes();
+	}
+
+	public static byte[] createFindUserHeader(User user) {
+		return String.format("%s:%s", user.getIPAddress(), user.getPort()).getBytes();
 	}
 }

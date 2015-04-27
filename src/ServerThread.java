@@ -1,10 +1,17 @@
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerThread extends Thread {
 	
-	private static final int SERVER_PORT = 50000;
+	public static final int SERVER_PORT = 50000;
+	
+	private UserMonitor userMonitor;
+
+	public ServerThread(UserMonitor userMonitor) {
+		this.userMonitor = userMonitor;
+	}
 
 	public void run() {
 		ServerSocket serverIn = null;
@@ -12,8 +19,23 @@ public class ServerThread extends Thread {
 			 serverIn = new ServerSocket(SERVER_PORT);
 			 Socket connectionSocket = null;
 			 while ((connectionSocket = serverIn.accept()) != null) {
-				 DownloadThread downloader = new DownloadThread(connectionSocket);
-				 downloader.start();
+				BufferedInputStream in = new BufferedInputStream(connectionSocket.getInputStream());
+
+				Header header = new Header(in);
+				header.parseHeader();
+				int type = header.getType();
+				switch (type) {
+				case Header.TYPE_FILE:
+					FileMetadata metadata = header.parseFileMetadata();
+					System.out.println(String.format("Filename: %s | filesize: %s",
+							metadata.getFilename(), metadata.getFilesize()));
+					DownloadThread downloader = new DownloadThread(metadata, in);
+					downloader.start();
+					break;
+				case Header.TYPE_USER:
+					userMonitor.addUser(header.parseUser());
+					break;
+				}
 			 }
 		} catch (IOException e) {
 			e.printStackTrace();

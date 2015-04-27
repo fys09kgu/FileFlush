@@ -1,32 +1,25 @@
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Socket;
-import java.io.File;
 
 public class DownloadThread extends Thread {
 
-	private Socket socket;
+	private BufferedInputStream inputStream;
+	private FileMetadata metadata;
 
-	public DownloadThread(Socket connectionSocket) {
-		this.socket = connectionSocket;
+	public DownloadThread(FileMetadata metadata, BufferedInputStream inputStream) {
+		this.metadata = metadata;
+		this.inputStream = inputStream;
 	}
 	
 	public void run() {
-		BufferedInputStream in = null;
 		FileOutputStream out = null;
 		byte[] buffer = new byte[8192];
 		int dataLength = 0;
 		try {
-			in = new BufferedInputStream(this.socket.getInputStream());
-			
-			Header header = new Header(in);
-			header.parse();
-			System.out.println(String.format("Filename: %s | filesize: %s",
-					header.getFilename(), header.getFilesize()));
-			
-			out = new FileOutputStream(new File("testner", header.getFilename()));
-			while((dataLength = in.read(buffer, 0, buffer.length)) > 0) {
+			out = new FileOutputStream(new File("testner", metadata.getFilename()));
+			while((dataLength = inputStream.read(buffer, 0, buffer.length)) > 0) {
 				out.write(buffer, 0, dataLength);
 			}
 			out.flush();
@@ -35,7 +28,7 @@ public class DownloadThread extends Thread {
 		} finally {
 			try {
 				out.close();
-				in.close();
+				inputStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
