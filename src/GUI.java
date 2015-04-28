@@ -1,5 +1,10 @@
 import javax.swing.*;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /*
  * The server as a GUI
@@ -19,7 +24,8 @@ public class GUI extends JFrame{
     private JButton button;
     private JProgressBar pbar;
     private JLabel fileLabel;
-   // private JFileChooser jfc;
+    private JFileChooser fileChooser;
+    private JTextArea dropArea; 
     
     // server constructor that receive the port to listen to for connection as parameter
     GUI() {
@@ -30,6 +36,11 @@ public class GUI extends JFrame{
         setSize(500,525);
         content.setSize(500,500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent){
+               System.exit(0);
+            }        
+         });    
         
                      
         panelBars = new JPanel();
@@ -62,6 +73,7 @@ public class GUI extends JFrame{
         list.setBounds(50, 50, 150, 200);
         System.out.println(list.getSelectedValue());
         list.setSelectedIndex(1);
+        list.setDragEnabled(true);
         panelList.add(list); 
         
         pbar = new JProgressBar();
@@ -74,13 +86,21 @@ public class GUI extends JFrame{
         fileLabel.setBounds(10, 50, 50, 25);
         panelBars.add(fileLabel);
         
-        //jfc = new JFileChooser();
+        dropArea = new JTextArea();
+        dropArea.setBounds(50, 50, 100, 100);
+        //panelDrop.add(dropArea);
         
-        
+        //fileChooser = new JFileChooser();
+        //fileChooser.setDialogTitle("Choose a file");
+        //fileChooser.setBounds(0, 0, 250, 250);
+        //panelDrop.add(fileChooser);
+ 
+           
         setVisible(true);
     }
     
-    
+   
+   
 }
 
 
