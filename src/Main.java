@@ -23,9 +23,9 @@ public class Main {
         listenFind.setUser(owner);
         listenFind.start();
         
-        /*Find find = new Find();
+        Find find = new Find();
         find.setUser(owner);
-        find.start();*/
+        find.start();
         
         System.out.println("Specify: host port filePath");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

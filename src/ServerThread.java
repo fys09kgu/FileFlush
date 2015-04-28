@@ -33,7 +33,13 @@ public class ServerThread extends Thread {
 					downloader.start();
 					break;
 				case Header.TYPE_USER:
-					userMonitor.addUser(header.parseUser());
+					User user = header.parseUser();
+					System.out.println("TCP user packet: " + user);
+					userMonitor.addUser(user);
+					System.out.println("Users:");
+					for (User u : userMonitor.getUsers()) {
+						System.out.println(u);
+					}
 					break;
 				}
 			 }
