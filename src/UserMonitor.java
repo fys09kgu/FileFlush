@@ -1,7 +1,7 @@
 import java.util.HashSet;
+import java.util.Observable;
 
-
-public class UserMonitor {
+public class UserMonitor extends Observable{
 	private HashSet<User> users;
 	
 	public UserMonitor() {
@@ -14,5 +14,11 @@ public class UserMonitor {
 	
 	public synchronized void addUser(User u) {
 		users.add(u);
+		notifyObservers(u);
+	}
+	
+	public synchronized void removeUser(User u) {
+		users.remove(u);
+		notifyObservers(u);
 	}
 }
