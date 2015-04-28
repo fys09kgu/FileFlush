@@ -24,6 +24,10 @@ public class Header {
 			sb.append(c);
 		}
 		header = sb.toString().split(";");
+		System.out.println(sb);
+		if (!(header.length > 0)) {
+			throw new IOException("Header length is zero.");
+		}
 		type = Integer.parseInt(header[0]);
 	}
 	
@@ -41,11 +45,12 @@ public class Header {
 	
 	public User parseUser() throws IOException {
 		String[] address = header[1].split(":");
-		return new User(InetAddress.getByName(address[0]), Integer.parseInt(address[1]), header[2]);
+		String username = (header.length >= 3) ? header[2] : "";
+		return new User(InetAddress.getByName(address[0]), Integer.parseInt(address[1]), username);
 	}
 	
 	public static byte[] createUserHeader(User user) {
-		return String.format("%d;%s;%s\n", TYPE_USER, user.getIPAddress(), user.getPort(), user.getUsername()).getBytes();
+		return String.format("%d;%s:%s;%s\n", TYPE_USER, user.getIPAddress(), user.getPort(), user.getUsername()).getBytes();
 	}
 
 	public static byte[] createFindUserHeader(User user) {

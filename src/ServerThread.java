@@ -22,7 +22,12 @@ public class ServerThread extends Thread {
 				BufferedInputStream in = new BufferedInputStream(connectionSocket.getInputStream());
 
 				Header header = new Header(in);
-				header.parseHeader();
+				try {
+					header.parseHeader();
+				} catch (IOException e) {
+					System.out.println(e);
+					continue;
+				}
 				int type = header.getType();
 				switch (type) {
 				case Header.TYPE_FILE:
@@ -33,7 +38,13 @@ public class ServerThread extends Thread {
 					downloader.start();
 					break;
 				case Header.TYPE_USER:
-					userMonitor.addUser(header.parseUser());
+					User user = header.parseUser();
+					System.out.println("TCP user packet: " + user);
+					userMonitor.addUser(user);
+					System.out.println("Users:");
+					for (User u : userMonitor.getUsers()) {
+						System.out.println(u);
+					}
 					break;
 				}
 			 }

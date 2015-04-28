@@ -20,7 +20,7 @@ public class ListenFind extends Thread {
 				DatagramPacket dp = new DatagramPacket(buf, buf.length);
 				ms.receive(dp);
 				String s = new String(dp.getData(), 0, dp.getLength());
-				System.out.println("Received: " + s);
+				System.out.println("Received UDP packet: " + s);
 				
 				// TODO: check that the packet we received is what we expected
 				
@@ -29,6 +29,8 @@ public class ListenFind extends Thread {
 
 				BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());
 				os.write(Header.createUserHeader(user));
+				os.flush();
+				os.close();
 				socket.close();
 			}
 		} catch (IOException e) {
