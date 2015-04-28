@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /*
  * The server as a GUI
@@ -24,11 +26,12 @@ public class GUI extends JFrame{
     private JButton button;
     private JProgressBar pbar;
     private JLabel fileLabel;
-    private JFileChooser fileChooser;
+    //private JFileChooser fileChooser;
     private JTextArea dropArea; 
+    private UserMonitor um;
     
     // server constructor that receive the port to listen to for connection as parameter
-    GUI() {
+    GUI(UserMonitor um) {
         super("FileFlush");
         Container content = getContentPane();
         content.setLayout(null);
@@ -36,12 +39,7 @@ public class GUI extends JFrame{
         setSize(500,525);
         content.setSize(500,500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent windowEvent){
-               System.exit(0);
-            }        
-         });    
-        
+        this.um = um;
                      
         panelBars = new JPanel();
         panelBars.setBackground(Color.white);
@@ -66,10 +64,11 @@ public class GUI extends JFrame{
         
         button = new JButton("Knapp");
         button.setBounds(0, 475, 90, 25);
+        button.addActionListener(new FindButtonListener(um));
         panelList.add(button);
         
-        String[] selections = { "user1", "user2", "user3", "user4" };
-        list = new JList<String>(selections);
+        String[] userList = getUserList();
+        list = new JList<String>(userList);
         list.setBounds(50, 50, 150, 200);
         System.out.println(list.getSelectedValue());
         list.setSelectedIndex(1);
@@ -99,8 +98,16 @@ public class GUI extends JFrame{
         setVisible(true);
     }
     
-   
-   
+    private String[] getUserList(){
+    	HashSet<User> users = um.getUsers();
+    	String[] usernames = new String[users.size()];
+    	int i = 0;
+    	for (User u : users) {
+    		usernames[i++] = u.getUsername();
+    	}
+    	return usernames;
+    }
+
 }
 
 

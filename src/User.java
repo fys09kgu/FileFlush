@@ -1,4 +1,5 @@
 import java.net.InetAddress;
+import java.util.Objects;
 
 public class User {
 	private InetAddress address;
@@ -28,13 +29,13 @@ public class User {
 	}
 	
 	public int hashCode() {
-		return (address + Integer.toString(port)).hashCode();
+		return Objects.hash(getIPAddress(), port);
 	}
 	
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {
 			User u = (User) obj;
-			return (address.equals(u.getIPAddress()) && port == u.getPort());
+			return (getIPAddress().equals(u.getIPAddress()) && port == u.getPort());
 		}
 		return false;
 	}

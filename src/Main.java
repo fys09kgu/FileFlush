@@ -9,23 +9,18 @@ import java.net.UnknownHostException;
 public class Main {
 
     public static void main(String[] args) throws UnknownHostException {
-        new GUI();
-        
-        UserMonitor userMonitor = new UserMonitor();
-        
+    	User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT, "");
+    	UserMonitor userMonitor = new UserMonitor(owner);
+    	
         System.out.println("Creating Server Socket");
         ServerThread server = new ServerThread(userMonitor);
         server.start();
-        
-        User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT, "");
         
         ListenFind listenFind = new ListenFind();
         listenFind.setUser(owner);
         listenFind.start();
         
-        Find find = new Find();
-        find.setUser(owner);
-        find.start();
+        new GUI(userMonitor);
         
         System.out.println("Specify: host port filePath");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
