@@ -13,4 +13,8 @@ public class TransferMonitor extends Observable {
 		setChanged();
 		notifyObservers(client);
 	}
+
+	public int getTotalTransfers() {
+		return uploads.size();
+	}
 }

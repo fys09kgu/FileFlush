@@ -14,7 +14,6 @@ public class UserJList extends JList implements Observer{
 	User[] users;
 	
 	public UserJList(final TransferMonitor transferMonitor) {
-		this.setBounds(10, 10, 230, 400);
         this.setSelectedIndex(1);
         this.setDragEnabled(true);
         
