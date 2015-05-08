@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Observer;
 
 /*
  * The server as a GUI
@@ -62,17 +63,13 @@ public class GUI extends JFrame{
         panelList.setLayout(null);
         content.add(panelList);
         
-        button = new JButton("Knapp");
-        button.setBounds(0, 475, 90, 25);
+        button = new JButton("Find users");
+        button.setBounds(0, 475, 150, 25);
         button.addActionListener(new FindButtonListener(um));
         panelList.add(button);
         
-        String[] userList = getUserList();
-        list = new JList<String>(userList);
-        list.setBounds(50, 50, 150, 200);
-        System.out.println(list.getSelectedValue());
-        list.setSelectedIndex(1);
-        list.setDragEnabled(true);
+        list = new UserJList();
+        um.addObserver((Observer) list);
         panelList.add(list); 
         
         pbar = new JProgressBar();
@@ -98,16 +95,6 @@ public class GUI extends JFrame{
         setVisible(true);
     }
     
-    private String[] getUserList(){
-    	HashSet<User> users = um.getUsers();
-    	String[] usernames = new String[users.size()];
-    	int i = 0;
-    	for (User u : users) {
-    		usernames[i++] = u.getUsername();
-    	}
-    	return usernames;
-    }
-
 }
 
 

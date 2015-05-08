@@ -17,7 +17,6 @@ public class FindButtonListener implements ActionListener{
 		Find find = new Find();
         find.setUser(um.getOwner());
         find.start();
-		
 	}
 	
 }
