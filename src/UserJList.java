@@ -10,6 +10,8 @@ import javax.swing.JList;
 
 public class UserJList extends JList implements Observer{
 	
+	User[] users;
+	
 	public UserJList() {
 		this.setBounds(10, 10, 230, 400);
         this.setSelectedIndex(1);
@@ -27,7 +29,8 @@ public class UserJList extends JList implements Observer{
                     int returnVal = fc.showOpenDialog(null);
                     if (returnVal == JFileChooser.APPROVE_OPTION){
                     	File file = fc.getSelectedFile();
-                    	System.out.println(file);
+                    	System.out.println("Sending file " + file + " to " + users[index]);
+                    	users[index].sendFile(file);
                     }
                     
                 }
@@ -38,8 +41,7 @@ public class UserJList extends JList implements Observer{
 	@Override
 	public void update(Observable observable, Object arg1) {
 		UserMonitor um = (UserMonitor) observable;
-		this.setListData(um.getUserList());
+		this.users = um.getUserList();
+		this.setListData(users);
 	}
-	
-	
 }

@@ -30,13 +30,13 @@ public class UserMonitor extends Observable{
 		return owner;
 	}
 	
-	public String[] getUserList() {
+	public User[] getUserList() {
 		HashSet<User> users = getUsers();
-		String[] usernames = new String[users.size()];
+		User[] userList = new User[users.size()];
 		int i = 0;
 		for (User u : users) {
-			usernames[i++] = u.getUsername();
+			userList[i++] = u;
 		}
-		return usernames;
+		return userList;
 	}
 }
