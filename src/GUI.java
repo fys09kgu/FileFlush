@@ -27,7 +27,6 @@ public class GUI extends JFrame{
     private JButton button;
     private JProgressBar pbar;
     private JLabel fileLabel;
-    //private JFileChooser fileChooser;
     private JTextArea dropArea; 
     private UserMonitor um;
     
@@ -85,11 +84,6 @@ public class GUI extends JFrame{
         dropArea = new JTextArea();
         dropArea.setBounds(50, 50, 100, 100);
         //panelDrop.add(dropArea);
-        
-        //fileChooser = new JFileChooser();
-        //fileChooser.setDialogTitle("Choose a file");
-        //fileChooser.setBounds(0, 0, 250, 250);
-        //panelDrop.add(fileChooser);
  
            
         setVisible(true);
