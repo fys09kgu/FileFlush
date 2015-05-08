@@ -41,4 +41,12 @@ public class ClientThread extends Thread {
 			e.printStackTrace();
 		}
 	}
+
+	public String getFilename() {
+		return this.file.getName();
+	}
+	
+	public long getFilesize() {
+		return this.file.length();
+	}
 }

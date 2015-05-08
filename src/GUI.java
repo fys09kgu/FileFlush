@@ -21,7 +21,7 @@ public class GUI extends JFrame{
     // JTextArea for the chat room and the events
     
     private JPanel panelList;
-    private JPanel panelBars;
+    private JPanel progressPanel;
     private JPanel panelDrop;
     private JList<String> list;
     private JButton button;
@@ -40,13 +40,11 @@ public class GUI extends JFrame{
         content.setSize(500,500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.um = um;
-                     
-        panelBars = new JPanel();
-        panelBars.setBackground(Color.white);
-        panelBars.setLocation(250, 0);
-        panelBars.setSize(250, 250);
-        panelBars.setLayout(null);
-        content.add(panelBars);
+        
+        TransferMonitor transferMonitor = new TransferMonitor();
+        progressPanel = new ProgressPanel();
+        transferMonitor.addObserver((Observer) progressPanel);
+        content.add(progressPanel);
         
         panelDrop = new JPanel();
         panelDrop.setBackground(Color.green);
@@ -67,19 +65,9 @@ public class GUI extends JFrame{
         button.addActionListener(new FindButtonListener(um));
         panelList.add(button);
         
-        list = new UserJList();
+        list = new UserJList(transferMonitor);
         um.addObserver((Observer) list);
-        panelList.add(list); 
-        
-        pbar = new JProgressBar();
-        pbar.setMinimum(0);
-        pbar.setMaximum(100);
-        pbar.setBounds(50, 50, 150, 25);
-        panelBars.add(pbar);
-        
-        fileLabel = new JLabel("File1");
-        fileLabel.setBounds(10, 50, 50, 25);
-        panelBars.add(fileLabel);
+        panelList.add(list);
         
         dropArea = new JTextArea();
         dropArea.setBounds(50, 50, 100, 100);

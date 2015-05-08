@@ -27,14 +27,11 @@ public class User {
 		return username;
 	}
 	
-	public void sendFile(File file) {
-		try {
-			Socket socket = new Socket(address, port);
-			ClientThread client = new ClientThread(socket, file);
-			client.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public ClientThread sendFile(File file) throws IOException {
+		Socket socket = new Socket(address, port);
+		ClientThread client = new ClientThread(socket, file);
+		client.start();
+		return client;
 	}
 	
 	public String toString() {
