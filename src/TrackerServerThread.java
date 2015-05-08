@@ -3,14 +3,10 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketImpl;
 import java.util.ArrayList;
 
 /**
- * @author alexander
- *
  *         Maintains the server socket of the Tracker application.
- *
  */
 
 public class TrackerServerThread extends Thread {
@@ -35,39 +31,42 @@ public class TrackerServerThread extends Thread {
 			e.printStackTrace();
 		} finally {
 			try {
+				for (TrackerClientConnection conn : clients){
+					conn.Terminate();
+				}
 				serverIn.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			clients.clear();
 		}
 	}
 	
 	/**
 	 * Sends a user to all connected clients.
 	 * 
-	 * @param u User to send
+	 * @param user User to send
 	 */
-	public void SendUser(User u) {
+	public void SendUser(User user) {
 		for (TrackerClientConnection conn : clients){
 			// Skip sending updates on a user to that user.
-			if (conn.getUser().equals(u)) continue;
+			if (conn.getUser().equals(user)) continue;
 			
 			try {
-				conn.SendUser(u);
+				conn.SendUser(user);
 			} catch (IOException e) {
 				System.out.println("A connection error occured.");
 				continue;
 			}
 		}
 	}
+	
+	public void SendRemovedUser(User user) {
+		// TODO Auto-generated method stub
+	}
 
 	/**
-	 * @author alexander
-	 *
 	 *	Represents a connection to a client.
 	 *	Is responsible for I/O to a client.
-	 *
 	 */
 	private class TrackerClientConnection extends Thread {
 		private User user;

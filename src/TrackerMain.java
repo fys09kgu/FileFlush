@@ -24,25 +24,27 @@ public class TrackerMain {
  */
 class TrackerSystem implements Observer {
 	private UserMonitor userMonitor;
+	private TrackerServerThread server;
 
 	public TrackerSystem() {
-		this.userMonitor = new UserMonitor();
+		this.userMonitor = new UserMonitor(null);
 		userMonitor.addObserver(this);
 
-		TrackerServerThread server = new TrackerServerThread(userMonitor);
+		server = new TrackerServerThread(userMonitor);
 		server.start();
 	}
 
 	@Override
 	public void update(Observable userMonitor, Object arg) {
 		User user = (User) arg;
-
-		// TODO: Check if user was added or removed.
+		
 		// If user was added, they exist in UserMonitor.
 		// If user was removed, then they do not exist in UserMonitor.
-
-		// TODO: Transmit user addition to all clients.
-
-		// TODO: Transmit user deletion to all clients?
+		if (this.userMonitor.getUsers().contains(user)){
+			server.SendUser(user);
+		}
+		else{
+			server.SendRemovedUser(user);
+		}
 	}
 }
