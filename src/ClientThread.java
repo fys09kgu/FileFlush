@@ -5,14 +5,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.Observable;
 
-public class ClientThread extends Thread {
+public class ClientThread extends Observable implements Runnable {
 	Socket socket;
 	File file;
+	private int uploaded;
 
 	public ClientThread(Socket socket, File file) {
 		this.socket = socket;
 		this.file = file;
+		this.uploaded = 0;
 	}
 
 	public void run(){
@@ -30,6 +33,7 @@ public class ClientThread extends Thread {
 			int count;
 			while ((count = fis.read(buffer)) > 0){
 				os.write(buffer, 0, count);
+				increaseUploadSize(count);
 			}
 			os.flush();
 			fis.close();
@@ -40,6 +44,12 @@ public class ClientThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void increaseUploadSize(int size) {
+		uploaded += size;
+		setChanged();
+		notifyObservers(uploaded);
 	}
 
 	public String getFilename() {

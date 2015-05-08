@@ -26,7 +26,9 @@ public class TransferPanel extends JPanel implements Observer {
 		labelConstraints.gridy = gridy;
 		add(label, labelConstraints);
 		
-		JProgressBar progressBar = new JProgressBar();
+		TransferProgressBar progressBar = new TransferProgressBar();
+		client.addObserver(progressBar);
+		progressBar.setMaximum((int) client.getFilesize());
 		GridBagConstraints progressBarConstraints = new GridBagConstraints();
 		progressBarConstraints.fill = GridBagConstraints.HORIZONTAL;
 		progressBarConstraints.insets = new Insets(0, 0, 5, 0);

@@ -1,7 +1,9 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.GridBagLayout;
@@ -96,43 +98,11 @@ public class FileFlushGUI extends JFrame {
 		gbc_transferPanel.gridy = 0;
 		contentPane.add(transferPanel, gbc_transferPanel);
 		GridBagLayout gbl_transferPanel = new GridBagLayout();
-		gbl_transferPanel.columnWidths = new int[] {150, 274, 0};
+		gbl_transferPanel.columnWidths = new int[] {150, 250, 0};
 		gbl_transferPanel.rowHeights = new int[]{0, 0, 0, 0};
 		gbl_transferPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		gbl_transferPanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		transferPanel.setLayout(gbl_transferPanel);
-		
-		/*JLabel lblTestfile = new JLabel("testfile1");
-		GridBagConstraints gbc_lblTestfile = new GridBagConstraints();
-		gbc_lblTestfile.anchor = GridBagConstraints.WEST;
-		gbc_lblTestfile.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTestfile.gridx = 0;
-		gbc_lblTestfile.gridy = 0;
-		transferPanel.add(lblTestfile, gbc_lblTestfile);
-		
-		JProgressBar progressBar = new JProgressBar();
-		GridBagConstraints gbc_progressBar = new GridBagConstraints();
-		gbc_progressBar.fill = GridBagConstraints.HORIZONTAL;
-		gbc_progressBar.insets = new Insets(0, 0, 5, 0);
-		gbc_progressBar.gridx = 1;
-		gbc_progressBar.gridy = 0;
-		transferPanel.add(progressBar, gbc_progressBar);
-		
-		JLabel lblTestfile_1 = new JLabel("testfile2");
-		GridBagConstraints gbc_lblTestfile_1 = new GridBagConstraints();
-		gbc_lblTestfile_1.anchor = GridBagConstraints.WEST;
-		gbc_lblTestfile_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTestfile_1.gridx = 0;
-		gbc_lblTestfile_1.gridy = 1;
-		transferPanel.add(lblTestfile_1, gbc_lblTestfile_1);
-		
-		JProgressBar progressBar_1 = new JProgressBar();
-		GridBagConstraints gbc_progressBar_1 = new GridBagConstraints();
-		gbc_progressBar_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_progressBar_1.insets = new Insets(0, 0, 5, 0);
-		gbc_progressBar_1.gridx = 1;
-		gbc_progressBar_1.gridy = 1;
-		transferPanel.add(progressBar_1, gbc_progressBar_1);*/
 		
 		JPanel uploadPanel = new JPanel();
 		GridBagConstraints gbc_uploadPanel = new GridBagConstraints();

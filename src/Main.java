@@ -35,7 +35,7 @@ public class Main {
 				String filePath = options[2];
 				Socket socket = new Socket(hostName, port);
 				ClientThread ct = new ClientThread(socket, new File(filePath));
-				ct.start();
+				new Thread(ct).start();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

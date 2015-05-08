@@ -29,7 +29,7 @@ public class UserJList extends JList implements Observer{
 						System.out.println("Sending file " + file + " to "
 								+ users[index]);
 						try {
-							transferMonitor.addUpload(users[index].sendFile(file));
+							transferMonitor.addUpload(users[index], file);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
