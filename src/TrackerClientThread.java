@@ -1,9 +1,9 @@
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 /**
  * @author alexander
@@ -24,24 +24,40 @@ public class TrackerClientThread extends Thread {
 	 */
 	public TrackerClientThread(UserMonitor userMonitor) {
 		this.userMonitor = userMonitor;
-		this.socket = new Socket();
 	}
 
 	public void run() {
-		InputStream is = null;
 		BufferedOutputStream os = null;
 		
-		byte[] buffer = new byte[4096];
-		
 		try {
-			is = socket.getInputStream();
-			os = new BufferedOutputStream(socket.getOutputStream());
+			// Start the connection
+			socket = new Socket("test", 50001);
 			
-			os.flush();
-			is.close();
-			os.close();
+			// Get streams
+			os = new BufferedOutputStream(socket.getOutputStream());
+			Header header = new Header(new BufferedInputStream(socket.getInputStream()));
+			
+			// Parse incoming users
+			while(!socket.isClosed()){
+				header.parseHeader();
+				if(header.getType() == 1){
+					userMonitor.addUser(header.parseUser());
+				}
+				else{
+					socket.close();
+					throw new IOException("Malformed user list from tracker");
+				}
+			}
+			
 			socket.close();
-		} catch (IOException e) {
+		}
+		catch (UnknownHostException e) {
+			System.out.println("Failed to connect to Tracker");
+		}
+		catch (SocketException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 
