@@ -21,6 +21,9 @@ public class Main {
         listenFind.setUser(owner);
         listenFind.start();
         
+    	TrackerClientThread track = new TrackerClientThread(userMonitor, owner);
+    	track.start();
+        
         FileFlushGUI gui = new FileFlushGUI(userMonitor, transferMonitor);
         gui.setVisible(true);
         

@@ -5,8 +5,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import sun.security.ssl.Debug;
+
 /**
  *         Maintains the server socket of the Tracker application.
+ *         This socket listens for new peers.
  */
 
 public class TrackerServerThread extends Thread {
@@ -16,6 +19,7 @@ public class TrackerServerThread extends Thread {
 
 	public TrackerServerThread(UserMonitor userMonitor) {
 		this.userMonitor = userMonitor;
+		clients = new ArrayList<TrackerClientConnection>();
 	}
 
 	public void run() {
@@ -23,15 +27,17 @@ public class TrackerServerThread extends Thread {
 		try {
 			serverIn = new ServerSocket(SERVER_PORT);
 			Socket connectionSocket = null;
-			while ((connectionSocket = serverIn.accept()) != null) {
+			while (true) {
+				connectionSocket = serverIn.accept();
 				TrackerClientConnection conn = new TrackerClientConnection(connectionSocket, userMonitor, clients);
-				clients.add(conn);
+				this.clients.add(conn);
+				conn.start();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			
 		} finally {
 			try {
-				for (TrackerClientConnection conn : clients){
+				for (TrackerClientConnection conn : this.clients){
 					conn.Terminate();
 				}
 				serverIn.close();
@@ -87,6 +93,7 @@ public class TrackerServerThread extends Thread {
 			this.connectionSocket = connectionSocket;
 			this.userMonitor = userMonitor;
 			this.clients = clients;
+			System.out.println("New connection:" + connectionSocket.getInetAddress() + ":" + connectionSocket.getPort());
 		}
 		
 		public void run(){
@@ -94,6 +101,8 @@ public class TrackerServerThread extends Thread {
 				BufferedInputStream in = new BufferedInputStream(connectionSocket.getInputStream());
 				os = new BufferedOutputStream(connectionSocket.getOutputStream());
 
+				Debug.println("ST", "Streams created");
+				
 				Header header = new Header(in);
 				try {
 					header.parseHeader();
@@ -101,6 +110,9 @@ public class TrackerServerThread extends Thread {
 					System.out.println(e);
 				}
 				int type = header.getType();
+				
+				Debug.println("ST", "Client Header:" + type);
+				
 				switch (type) {
 				case Header.TYPE_FILE:
 					throw new IOException("File transfer attempted. Not supported.");
@@ -110,14 +122,17 @@ public class TrackerServerThread extends Thread {
 					userMonitor.addUser(user);
 					break;
 				}
+				while(true){
+					in.read();
+				}
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
 				clients.remove(this);
-				if (!this.user.equals(null)) {
-					this.userMonitor.removeUser(this.user);
-				}
+				this.userMonitor.removeUser(this.user);
 			}
+			System.out.println("Connection to a client was terminated.");
 		}
 
 		/**
@@ -126,22 +141,22 @@ public class TrackerServerThread extends Thread {
 		 * @throws IOException
 		 */
 		synchronized public void SendAllUsers() throws IOException {
-			String output = "";
 			for (User u : userMonitor.getUsers()) {
-				output.concat(u.toString() + ";");
+				os.write(Header.createUserHeader(u));
 			}
-			os.write(output.getBytes());
+			os.flush();
 		}
 
 		
 		/**
 		 * Sends a single user to this connection's peer.
 		 * 
-		 * @param u	The user to transmit.
+		 * @param u The user to transmit.
 		 * @throws IOException
 		 */
 		synchronized public void SendUser(User u) throws IOException {
 			os.write((u.toString() + ";").getBytes());
+			os.flush();
 		}
 		
 		/**

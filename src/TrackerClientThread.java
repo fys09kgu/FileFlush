@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import sun.security.ssl.Debug;
+
 /**
  * @author alexander
  *
@@ -16,14 +18,17 @@ public class TrackerClientThread extends Thread {
 
 	private UserMonitor userMonitor;
 	private Socket socket;
+	private User owner;
 
 	/**
 	 * Initiates a client-to-tracker thread.
 	 * 
 	 * @param userMonitor The local UserMonitor.
+	 * @param owner 
 	 */
-	public TrackerClientThread(UserMonitor userMonitor) {
+	public TrackerClientThread(UserMonitor userMonitor, User owner) {
 		this.userMonitor = userMonitor;
+		this.owner = owner;
 	}
 
 	public void run() {
@@ -31,35 +36,43 @@ public class TrackerClientThread extends Thread {
 		
 		try {
 			// Start the connection
-			socket = new Socket("test", 50001);
+			socket = new Socket("localhost", 50001);
+			
+			Debug.println("CT", "Connected to tracker");
 			
 			// Get streams
 			os = new BufferedOutputStream(socket.getOutputStream());
 			Header header = new Header(new BufferedInputStream(socket.getInputStream()));
 			
+			Debug.println("CT", "Streams created");
+			
+			os.write(Header.createUserHeader(owner));
+			os.flush();
+			
+			Debug.println("CT", "Sent user header");
+			
 			// Parse incoming users
 			while(!socket.isClosed()){
 				header.parseHeader();
+				Debug.println("CT", "Header recieved");
 				if(header.getType() == 1){
 					userMonitor.addUser(header.parseUser());
 				}
 				else{
 					socket.close();
-					throw new IOException("Malformed user list from tracker");
+					throw new IOException();
 				}
 			}
-			
-			socket.close();
 		}
 		catch (UnknownHostException e) {
-			System.out.println("Failed to connect to Tracker");
+			System.out.println("Failed to resolve Tracker Address");
+			return;
 		}
 		catch (SocketException e) {
-			e.printStackTrace();
+			System.out.println("No connection to Tracker");
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException e){
+			System.out.println("Malformed user data from Tracker");
 		}
-
 	}
 }

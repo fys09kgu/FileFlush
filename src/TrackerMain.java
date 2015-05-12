@@ -9,8 +9,12 @@
  *
  */
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
+
+import sun.security.ssl.Debug;
 
 public class TrackerMain {
 
@@ -32,10 +36,20 @@ class TrackerSystem implements Observer {
 
 		server = new TrackerServerThread(userMonitor);
 		server.start();
+		
+		/* THIS SECTION ADDS A TEST USER
+		try {
+			userMonitor.addUser(new User(InetAddress.getByName("192.168.100.1"), 1234, "Test User"));
+		} catch (UnknownHostException e) {
+		}
+		*/
+		
+		System.out.println("Tracker Online");
 	}
 
 	@Override
 	public void update(Observable userMonitor, Object arg) {
+		Debug.println("User List", "Updated");
 		User user = (User) arg;
 		
 		// If user was added, they exist in UserMonitor.

@@ -1,6 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 public class Header {
 	public static final int TYPE_FILE = 0;
@@ -14,21 +15,30 @@ public class Header {
 		this.inputStream = in;
 	}
 	
-	public void parseHeader() throws IOException {
-		int b = 0;
+	public void parseHeader() throws SocketException, IOException {
+		int b = 0; 
 		char c = 0;
 		StringBuilder sb = new StringBuilder();
-		while ((b = inputStream.read()) != -1) {
-			c = (char) b;
-			if (c == '\n') break;
-			sb.append(c);
+		try {
+			while ((b = inputStream.read()) != -1) {
+				c = (char) b;
+				if (c == '\n') break;
+				sb.append(c);
+			}
+		} catch (IOException e) {
+			throw new SocketException();
 		}
 		header = sb.toString().split(";");
 		System.out.println(sb);
 		if (!(header.length > 0)) {
-			throw new IOException("Header length is zero.");
+			throw new IOException();
 		}
-		type = Integer.parseInt(header[0]);
+		try{
+			type = Integer.parseInt(header[0]);
+		}
+		catch (NumberFormatException e){
+			throw new IOException();
+		}
 	}
 	
 	public int getType() {
