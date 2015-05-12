@@ -42,7 +42,7 @@ public class GUI extends JFrame{
         this.um = um;
         
         TransferMonitor transferMonitor = new TransferMonitor();
-        progressPanel = new ProgressPanel();
+        progressPanel = new TransferPanel();
         transferMonitor.addObserver((Observer) progressPanel);
         content.add(progressPanel);
         

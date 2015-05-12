@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -26,12 +25,9 @@ public class User {
 	public String getUsername() {
 		return username;
 	}
-	
-	public ClientThread sendFile(File file) throws IOException {
-		Socket socket = new Socket(address, port);
-		ClientThread client = new ClientThread(socket, file);
-		client.start();
-		return client;
+
+	public Socket getSocket() throws IOException {
+		return new Socket(address, port);
 	}
 	
 	public String toString() {

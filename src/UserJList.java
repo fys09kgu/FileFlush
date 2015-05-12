@@ -14,7 +14,6 @@ public class UserJList extends JList implements Observer{
 	User[] users;
 	
 	public UserJList(final TransferMonitor transferMonitor) {
-		this.setBounds(10, 10, 230, 400);
         this.setSelectedIndex(1);
         this.setDragEnabled(true);
         
@@ -30,7 +29,7 @@ public class UserJList extends JList implements Observer{
 						System.out.println("Sending file " + file + " to "
 								+ users[index]);
 						try {
-							transferMonitor.addUpload(users[index].sendFile(file));
+							transferMonitor.addUpload(users[index], file);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
