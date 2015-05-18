@@ -25,7 +25,7 @@ public class ListenFind extends Thread {
 				// TODO: check that the packet we received is what we expected
 				
 				String[] address = s.split(":");
-				Socket socket = new Socket(address[0], Integer.parseInt(address[1]));
+				Socket socket = new Socket(address[0].trim(), Integer.parseInt(address[1].trim()));
 
 				BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());
 				os.write(Header.createUserHeader(user));
