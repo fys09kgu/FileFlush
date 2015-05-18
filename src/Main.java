@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 public class Main {
 
 	public static void main(String[] args) throws UnknownHostException {
-		User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT, "");
+		User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT);
 		UserMonitor userMonitor = new UserMonitor(owner);
 		TransferMonitor transferMonitor = new TransferMonitor();
     	

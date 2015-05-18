@@ -1,9 +1,13 @@
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Observable;
 
 public class UserMonitor extends Observable{
 	private HashSet<User> users;
 	private User owner;
+	private int trackerPort;
+	private InetAddress trackerAddress;
 	
 	public UserMonitor(User owner) {
 		users = new HashSet<User>();
@@ -38,5 +42,22 @@ public class UserMonitor extends Observable{
 			userList[i++] = u;
 		}
 		return userList;
+	}
+
+	public InetAddress getTrackerAddress() {
+		return trackerAddress;
+	}
+
+	public int getTrackerPort() {
+		return trackerPort;
+	}
+
+	public void setTrackerAddress(String host, int port) {
+		try {
+			this.trackerAddress = InetAddress.getByName(host);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		this.trackerPort = port;
 	}
 }

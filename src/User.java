@@ -14,6 +14,16 @@ public class User {
 		this.username = username;
 	}
 	
+	public User(InetAddress address, int port) {
+		this.address = address;
+		this.port = port;
+		this.username = "";
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
 	public String getIPAddress() {
 		return address.getHostAddress();
 	}

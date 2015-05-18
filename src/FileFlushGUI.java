@@ -20,11 +20,18 @@ import java.net.UnknownHostException;
 import java.util.Observer;
 
 import javax.swing.AbstractListModel;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class FileFlushGUI extends JFrame {
-
 	private JPanel contentPane;
 
 	/**
@@ -55,12 +62,26 @@ public class FileFlushGUI extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 500);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnSettings = new JMenu("Settings");
+		menuBar.add(mnSettings);
+		
+		JMenuItem mntmUsername = new JMenuItem("Username");
+		mntmUsername.addActionListener(new SettingsUsernameDialog(userMonitor));
+		mnSettings.add(mntmUsername);
+		
+		JMenuItem mntmTracker = new JMenuItem("Tracker");
+		mntmTracker.addActionListener(new SettingsTrackerDialog(userMonitor));
+		mnSettings.add(mntmTracker);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[] {350, 200};
-		gbl_contentPane.rowHeights = new int[] {200, 0, 50};
+		gbl_contentPane.rowHeights = new int[] {200, 30, 50};
 		gbl_contentPane.columnWeights = new double[]{0.0, 1.0};
 		gbl_contentPane.rowWeights = new double[]{1.0, 1.0, 0.0};
 		contentPane.setLayout(gbl_contentPane);
@@ -92,6 +113,7 @@ public class FileFlushGUI extends JFrame {
 		transferPanel.setMinimumSize(new Dimension(10, 300));
 		transferPanel.setBackground(Color.WHITE);
 		GridBagConstraints gbc_transferPanel = new GridBagConstraints();
+		gbc_transferPanel.gridheight = 3;
 		gbc_transferPanel.insets = new Insets(0, 0, 5, 0);
 		gbc_transferPanel.fill = GridBagConstraints.BOTH;
 		gbc_transferPanel.gridx = 1;
@@ -104,19 +126,6 @@ public class FileFlushGUI extends JFrame {
 		gbl_transferPanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		transferPanel.setLayout(gbl_transferPanel);
 		
-		JPanel uploadPanel = new JPanel();
-		GridBagConstraints gbc_uploadPanel = new GridBagConstraints();
-		gbc_uploadPanel.gridheight = 2;
-		gbc_uploadPanel.insets = new Insets(0, 0, 5, 0);
-		gbc_uploadPanel.fill = GridBagConstraints.BOTH;
-		gbc_uploadPanel.gridx = 1;
-		gbc_uploadPanel.gridy = 1;
-		contentPane.add(uploadPanel, gbc_uploadPanel);
-		
-		JButton button = new JButton("+");
-		button.setPreferredSize(new Dimension(200, 100));
-		uploadPanel.add(button);
-		
 		JButton btnFindUsers = new JButton("Find users");
 		btnFindUsers.addActionListener(new FindButtonListener(userMonitor));
 		GridBagConstraints gbc_btnFindUsers = new GridBagConstraints();
@@ -124,5 +133,38 @@ public class FileFlushGUI extends JFrame {
 		gbc_btnFindUsers.gridx = 0;
 		gbc_btnFindUsers.gridy = 2;
 		contentPane.add(btnFindUsers, gbc_btnFindUsers);
+	}
+
+	private final class SettingsUsernameDialog implements ActionListener {
+		private UserMonitor userMonitor;
+
+		public SettingsUsernameDialog(UserMonitor userMonitor) {
+			this.userMonitor = userMonitor;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			String response = JOptionPane.showInputDialog(null,
+		            "Username",
+		            "Change username",
+		            JOptionPane.QUESTION_MESSAGE);
+			userMonitor.getOwner().setUsername(response);
+		}
+	}
+
+	private final class SettingsTrackerDialog implements ActionListener {
+		private UserMonitor userMonitor;
+
+		public SettingsTrackerDialog(UserMonitor userMonitor) {
+			this.userMonitor = userMonitor;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			String response = JOptionPane.showInputDialog(null,
+		            "Address <address:port>",
+		            "Change tracker address",
+		            JOptionPane.QUESTION_MESSAGE);
+			String[] data = response.split(":");
+			userMonitor.setTrackerAddress(data[0].trim(), Integer.parseInt(data[1].trim()));
+		}
 	}
 }
