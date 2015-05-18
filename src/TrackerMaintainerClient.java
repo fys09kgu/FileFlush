@@ -7,6 +7,12 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * @author alexander
+ *
+ *	Manages the thread that connects to the tracking server.
+ *	Is responsible for starting and restarting this thread when the user changes the tracker server.
+ */
 class TrackerMaintainerClient implements Observer{
 	TrackerClientThread track;
 	UserMonitor userMonitor;
@@ -66,6 +72,8 @@ class TrackerMaintainerClient implements Observer{
 				
 				os.write(Header.createUserHeader(owner));
 				os.flush();
+				
+				System.out.println("Tracker connection Established");
 				
 				// Parse incoming users
 				while(!socket.isClosed()){
