@@ -10,7 +10,7 @@ import java.util.Observable;
 public class ClientThread extends Observable implements Runnable {
 	Socket socket;
 	File file;
-	private int uploaded;
+	private long uploaded;
 
 	public ClientThread(Socket socket, File file) {
 		this.socket = socket;
@@ -49,7 +49,7 @@ public class ClientThread extends Observable implements Runnable {
 	private void increaseUploadSize(int size) {
 		uploaded += size;
 		setChanged();
-		notifyObservers(uploaded);
+		notifyObservers(this);
 	}
 
 	public String getFilename() {
@@ -58,5 +58,9 @@ public class ClientThread extends Observable implements Runnable {
 	
 	public long getFilesize() {
 		return this.file.length();
+	}
+
+	public int getProgress() {		
+		return (int) ((double) uploaded/(double) getFilesize() * 100);
 	}
 }

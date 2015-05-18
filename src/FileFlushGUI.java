@@ -29,10 +29,14 @@ import javax.swing.JMenuItem;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
 
 
 public class FileFlushGUI extends JFrame {
 	private JPanel contentPane;
+	private JTable transferTable;
 
 	/**
 	 * Launch the application.
@@ -106,33 +110,51 @@ public class FileFlushGUI extends JFrame {
 		gbc_userList.gridx = 0;
 		gbc_userList.gridy = 0;
 		contentPane.add(userList, gbc_userList);
-		
-		TransferPanel transferPanel = new TransferPanel();
-		transferMonitor.addObserver((Observer) transferPanel);
-		transferPanel.setPreferredSize(new Dimension(10, 300));
-		transferPanel.setMinimumSize(new Dimension(10, 300));
-		transferPanel.setBackground(Color.WHITE);
-		GridBagConstraints gbc_transferPanel = new GridBagConstraints();
-		gbc_transferPanel.gridheight = 3;
-		gbc_transferPanel.insets = new Insets(0, 0, 5, 0);
-		gbc_transferPanel.fill = GridBagConstraints.BOTH;
-		gbc_transferPanel.gridx = 1;
-		gbc_transferPanel.gridy = 0;
-		contentPane.add(transferPanel, gbc_transferPanel);
-		GridBagLayout gbl_transferPanel = new GridBagLayout();
-		gbl_transferPanel.columnWidths = new int[] {150, 250, 0};
-		gbl_transferPanel.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_transferPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_transferPanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		transferPanel.setLayout(gbl_transferPanel);
+//		
+//		TransferPanel transferPanel = new TransferPanel();
+//		transferMonitor.addObserver((Observer) transferPanel);
+//		transferPanel.setPreferredSize(new Dimension(10, 300));
+//		transferPanel.setMinimumSize(new Dimension(10, 300));
+//		transferPanel.setBackground(Color.WHITE);
+//		GridBagConstraints gbc_transferPanel = new GridBagConstraints();
+//		gbc_transferPanel.gridheight = 3;
+//		gbc_transferPanel.insets = new Insets(0, 0, 5, 0);
+//		gbc_transferPanel.fill = GridBagConstraints.BOTH;
+//		gbc_transferPanel.gridx = 1;
+//		gbc_transferPanel.gridy = 0;
+//		contentPane.add(transferPanel, gbc_transferPanel);
+//		GridBagLayout gbl_transferPanel = new GridBagLayout();
+//		gbl_transferPanel.columnWidths = new int[] {150, 250, 0};
+//		gbl_transferPanel.rowHeights = new int[]{0, 0, 0, 0};
+//		gbl_transferPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+//		gbl_transferPanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+//		transferPanel.setLayout(gbl_transferPanel);
 		
 		JButton btnFindUsers = new JButton("Find users");
 		btnFindUsers.addActionListener(new FindButtonListener(userMonitor));
+		
 		GridBagConstraints gbc_btnFindUsers = new GridBagConstraints();
 		gbc_btnFindUsers.insets = new Insets(0, 0, 0, 5);
 		gbc_btnFindUsers.gridx = 0;
 		gbc_btnFindUsers.gridy = 2;
 		contentPane.add(btnFindUsers, gbc_btnFindUsers);
+		
+		JScrollPane transferScrollPane = new JScrollPane();
+		GridBagConstraints gbc_transferScrollPane = new GridBagConstraints();
+		gbc_transferScrollPane.gridheight = 3;
+		gbc_transferScrollPane.insets = new Insets(0, 0, 5, 0);
+		gbc_transferScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_transferScrollPane.gridx = 1;
+		gbc_transferScrollPane.gridy = 0;
+		contentPane.add(transferScrollPane, gbc_transferScrollPane);
+		
+		transferTable = new TransferJTable();
+		transferMonitor.addObserver((Observer) transferTable);
+		transferTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+		transferTable.getColumnModel().getColumn(0).setMinWidth(150);
+		transferTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+		transferTable.getColumnModel().getColumn(1).setMinWidth(200);
+		transferScrollPane.setViewportView(transferTable);
 	}
 
 	private final class SettingsUsernameDialog implements ActionListener {
