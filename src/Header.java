@@ -26,18 +26,23 @@ public class Header {
 				sb.append(c);
 			}
 		} catch (IOException e) {
-			throw new SocketException();
+			throw new SocketException("Connection Error");
 		}
+		
+		if (sb.length() == 0) {
+			throw new SocketException("Connection Terminated");
+		}
+		
 		header = sb.toString().split(";");
 		System.out.println(sb);
 		if (!(header.length > 0)) {
-			throw new IOException();
+			throw new IOException("Input too short");
 		}
 		try{
 			type = Integer.parseInt(header[0]);
 		}
 		catch (NumberFormatException e){
-			throw new IOException();
+			throw new IOException("Input malformed");
 		}
 	}
 	

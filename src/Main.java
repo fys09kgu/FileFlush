@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Observable;
+import java.util.Observer;
 
 public class Main {
 
@@ -21,11 +23,10 @@ public class Main {
         listenFind.setUser(owner);
         listenFind.start();
         
-    	TrackerClientThread track = new TrackerClientThread(userMonitor, owner);
-    	track.start();
-        
         FileFlushGUI gui = new FileFlushGUI(userMonitor, transferMonitor);
         gui.setVisible(true);
+        
+        new TrackerMaintainerClient(userMonitor, owner);
         
         System.out.println("Specify: host port filePath");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -43,5 +44,5 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
+    }	
 }
