@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
+import system.Find;
 import system.ServerThread;
 import system.TransferMonitor;
 import system.User;
@@ -205,6 +206,22 @@ public class FileFlushGUI extends JFrame {
 					}
 				}
 			}
+		}
+	}
+	
+	private class FindButtonListener implements ActionListener {
+		
+		private UserMonitor um;
+
+		public FindButtonListener(UserMonitor um){
+			this.um = um;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			Find find = new Find();
+	        find.setUser(um.getOwner());
+	        find.start();
 		}
 	}
 }
