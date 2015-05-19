@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 
 import tracker.TrackerMaintainerClient;
 
-public class Main {
+public class FileFlush {
 
 	public static void main(String[] args) throws UnknownHostException {
 		User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT);
