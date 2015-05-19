@@ -58,6 +58,10 @@ public class ClientThread extends Transfer implements Runnable {
 		return this.file.getName();
 	}
 	
+	public String getProgressFilename() {
+		return "▲" + getFilename();
+	}
+	
 	public long getFilesize() {
 		return this.file.length();
 	}

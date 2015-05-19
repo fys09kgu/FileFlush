@@ -35,7 +35,7 @@ public class TransferTableModel extends AbstractTableModel implements Observer {
 	public Object getValueAt(int row, int col) {
 		Transfer ct = (Transfer) data.elementAt(row);
 		if (col == 0)
-			return ct.getFilename();
+			return ct.getProgressFilename();
 		else if (col == 1)
 			return new Integer(ct.getProgress());
 		else

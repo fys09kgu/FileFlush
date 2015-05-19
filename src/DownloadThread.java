@@ -62,6 +62,10 @@ public class DownloadThread extends Transfer implements Runnable {
 		return metadata.getFilename();
 	}
 
+	public String getProgressFilename() {
+		return "▼" + getFilename();
+	}
+
 	public long getFilesize() {
 		return metadata.getFilesize();
 	}

@@ -7,6 +7,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class ProgressBarRenderer extends DefaultTableCellRenderer {
 	private JProgressBar bar = new JProgressBar();
 	
+	public ProgressBarRenderer() {
+		bar.setStringPainted(true);
+	}
+	
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		bar.setValue((int) value);
