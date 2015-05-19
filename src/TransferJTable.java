@@ -13,11 +13,11 @@ public class TransferJTable extends JTable implements Observer {
 	@Override
 	public void update(Observable observable, Object object) {
 		TransferMonitor transferMonitor = (TransferMonitor) observable;
-		if (object instanceof ClientThread) {
-			ClientThread client = (ClientThread) object;
+		if (object instanceof UploadThread) {
+			UploadThread ut = (UploadThread) object;
 			TransferTableModel model = (TransferTableModel) getModel();
-			client.addObserver(model);
-			model.addTransfer(client);
+			ut.addObserver(model);
+			model.addTransfer(ut);
 		} else if (object instanceof DownloadThread) {
 			int dialogResult = JOptionPane.showConfirmDialog(null,
 					"Do you want to download this file?",

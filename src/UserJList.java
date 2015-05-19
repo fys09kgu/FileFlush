@@ -29,8 +29,8 @@ public class UserJList extends JList<Object> implements Observer{
 							System.out.println("Sending file " + file + " to "
 									+ users[index]);
 							try {
-								ClientThread ct = new ClientThread(users[index].getSocket(), file);
-								transferMonitor.addUpload(ct);
+								UploadThread ut = new UploadThread(users[index].getSocket(), file);
+								transferMonitor.addUpload(ut);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}

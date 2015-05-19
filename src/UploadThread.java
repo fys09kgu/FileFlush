@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-public class ClientThread extends Transfer implements Runnable {
+public class UploadThread extends Transfer implements Runnable {
 	Socket socket;
 	File file;
 	private long uploaded;
 
-	public ClientThread(Socket socket, File file) {
+	public UploadThread(Socket socket, File file) {
 		this.socket = socket;
 		this.file = file;
 		this.uploaded = 0;

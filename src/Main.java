@@ -36,8 +36,8 @@ public class Main {
 				int port = Integer.parseInt(options[1]);
 				String filePath = options[2];
 				Socket socket = new Socket(hostName, port);
-				ClientThread ct = new ClientThread(socket, new File(filePath));
-				new Thread(ct).start();
+				UploadThread ut = new UploadThread(socket, new File(filePath));
+				new Thread(ut).start();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

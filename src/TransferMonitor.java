@@ -3,11 +3,11 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class TransferMonitor extends Observable {
-	ArrayList<ClientThread> uploads;
+	ArrayList<UploadThread> uploads;
 	ArrayList<DownloadThread> downloads;
 
 	public TransferMonitor() {
-		uploads = new ArrayList<ClientThread>();
+		uploads = new ArrayList<UploadThread>();
 		downloads = new ArrayList<DownloadThread>();
 	}
 	
@@ -17,11 +17,11 @@ public class TransferMonitor extends Observable {
 		notifyObservers(dt);
 	}
 
-	public void addUpload(ClientThread ct) throws IOException {
-		new Thread(ct).start();
-		uploads.add(ct);
+	public void addUpload(UploadThread ut) throws IOException {
+		new Thread(ut).start();
+		uploads.add(ut);
 		setChanged();
-		notifyObservers(ct);
+		notifyObservers(ut);
 	}
 
 	public int getTotalTransfers() {
