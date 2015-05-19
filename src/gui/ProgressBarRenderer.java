@@ -1,3 +1,4 @@
+package gui;
 import java.awt.Component;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;

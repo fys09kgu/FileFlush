@@ -1,8 +1,11 @@
+package gui;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+
+import system.Transfer;
 
 public class TransferTableModel extends AbstractTableModel implements Observer {
 	private Vector data = new Vector();

@@ -1,3 +1,4 @@
+package tracker;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -6,6 +7,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
+import system.Header;
+import system.User;
+import system.UserMonitor;
 
 
 /**

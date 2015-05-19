@@ -1,3 +1,4 @@
+package gui;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -7,6 +8,11 @@ import java.util.Observer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+
+import system.TransferMonitor;
+import system.UploadThread;
+import system.User;
+import system.UserMonitor;
 
 public class UserJList extends JList<Object> implements Observer{
 	

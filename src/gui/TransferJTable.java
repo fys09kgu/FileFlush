@@ -1,8 +1,12 @@
+package gui;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+
+import system.DownloadThread;
+import system.UploadThread;
 
 public class TransferJTable extends JTable implements Observer {
 	public TransferJTable() {

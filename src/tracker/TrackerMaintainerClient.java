@@ -1,3 +1,4 @@
+package tracker;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -7,13 +8,17 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 
+import system.Header;
+import system.User;
+import system.UserMonitor;
+
 /**
  * @author alexander
  *
  *	Manages the thread that connects to the tracking server.
  *	Is responsible for starting and restarting this thread when the user changes the tracker server.
  */
-class TrackerMaintainerClient implements Observer{
+public class TrackerMaintainerClient implements Observer{
 	TrackerClientThread track;
 	UserMonitor userMonitor;
 	User owner;

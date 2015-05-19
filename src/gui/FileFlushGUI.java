@@ -1,3 +1,4 @@
+package gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -7,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.JList;
 import javax.swing.JButton;
 
@@ -27,6 +29,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+
+import system.ServerThread;
+import system.TransferMonitor;
+import system.User;
+import system.UserMonitor;
 
 public class FileFlushGUI extends JFrame {
 	private JPanel contentPane;
