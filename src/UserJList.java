@@ -22,17 +22,19 @@ public class UserJList extends JList implements Observer{
 				UserJList list = (UserJList) evt.getSource();
 				if (evt.getClickCount() == 1) {
 					int index = list.locationToIndex(evt.getPoint());
-					final JFileChooser fc = new JFileChooser();
-					int returnVal = fc.showOpenDialog(null);
-					if (returnVal == JFileChooser.APPROVE_OPTION) {
-						File file = fc.getSelectedFile();
-						System.out.println("Sending file " + file + " to "
-								+ users[index]);
-						try {
-							ClientThread ct = new ClientThread(users[index].getSocket(), file);
-							transferMonitor.addUpload(ct);
-						} catch (IOException e) {
-							e.printStackTrace();
+					if (index >= 0) {
+						final JFileChooser fc = new JFileChooser();
+						int returnVal = fc.showOpenDialog(null);
+						if (returnVal == JFileChooser.APPROVE_OPTION) {
+							File file = fc.getSelectedFile();
+							System.out.println("Sending file " + file + " to "
+									+ users[index]);
+							try {
+								ClientThread ct = new ClientThread(users[index].getSocket(), file);
+								transferMonitor.addUpload(ct);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
