@@ -42,8 +42,10 @@ public class UserJList extends JList implements Observer{
 
 	@Override
 	public void update(Observable observable, Object arg1) {
-		UserMonitor um = (UserMonitor) observable;
-		this.users = um.getUserList();
-		this.setListData(users);
+		if (observable instanceof UserMonitor) {
+			UserMonitor um = (UserMonitor) observable;
+			this.users = um.getUserList();
+			this.setListData(users);
+		}
 	}
 }
