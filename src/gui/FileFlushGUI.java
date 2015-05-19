@@ -1,6 +1,4 @@
 package gui;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -13,8 +11,6 @@ import javax.swing.JList;
 import javax.swing.JButton;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Observer;
 
 import javax.swing.AbstractListModel;
@@ -31,34 +27,12 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
 import system.Find;
-import system.ServerThread;
 import system.TransferMonitor;
-import system.User;
 import system.UserMonitor;
 
 public class FileFlushGUI extends JFrame {
 	private JPanel contentPane;
 	private JTable transferTable;
-
-	/**
-	 * Launch the application.
-	 * @throws UnknownHostException 
-	 */
-	public static void main(String[] args) throws UnknownHostException {
-		User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT);
-		final UserMonitor um = new UserMonitor(owner);
-		final TransferMonitor tm = new TransferMonitor();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FileFlushGUI frame = new FileFlushGUI(um, tm);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
