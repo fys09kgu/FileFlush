@@ -11,7 +11,7 @@ public class TransferTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public void update(Observable observable, Object object) {
-		int index = data.indexOf((ClientThread) object);
+		int index = data.indexOf(object);
 		if (index != -1) {
 			fireTableCellUpdated(index, 1);
 		}
@@ -33,7 +33,7 @@ public class TransferTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		ClientThread ct = (ClientThread) data.elementAt(row);
+		Transfer ct = (Transfer) data.elementAt(row);
 		if (col == 0)
 			return ct.getFilename();
 		else if (col == 1)
@@ -41,10 +41,10 @@ public class TransferTableModel extends AbstractTableModel implements Observer {
 		else
 			return null;
 	}
-
-	public void addTransfer(ClientThread ct) {
-		data.addElement(ct);
-		ct.addObserver(this);
+	
+	public void addTransfer(Transfer transfer) {
+		data.addElement(transfer);
+		transfer.addObserver(this);
 		fireTableRowsInserted(data.size()-1, data.size()-1);
 	}
 }

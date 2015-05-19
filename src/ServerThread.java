@@ -8,9 +8,11 @@ public class ServerThread extends Thread {
 	public static final int SERVER_PORT = 50000;
 	
 	private UserMonitor userMonitor;
+	private TransferMonitor transferMonitor;
 
-	public ServerThread(UserMonitor userMonitor) {
+	public ServerThread(UserMonitor userMonitor, TransferMonitor transferMonitor) {
 		this.userMonitor = userMonitor;
+		this.transferMonitor = transferMonitor;
 	}
 
 	public void run() {
@@ -35,8 +37,8 @@ public class ServerThread extends Thread {
 					metadata.setDirectory(userMonitor.getDirectory());
 					System.out.println(String.format("Filename: %s | filesize: %s",
 							metadata.getFilename(), metadata.getFilesize()));
-					DownloadThread downloader = new DownloadThread(metadata, in);
-					downloader.start();
+					DownloadThread dt = new DownloadThread(metadata, in);
+					transferMonitor.addDownload(dt);
 					break;
 				case Header.TYPE_USER:
 					User user = header.parseUser();

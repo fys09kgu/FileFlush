@@ -5,9 +5,17 @@ import java.util.Observable;
 
 public class TransferMonitor extends Observable {
 	ArrayList<ClientThread> uploads;
+	ArrayList<DownloadThread> downloads;
 
 	public TransferMonitor() {
 		uploads = new ArrayList<ClientThread>();
+		downloads = new ArrayList<DownloadThread>();
+	}
+	
+	public void addDownload(DownloadThread dt) {
+		downloads.add(dt);
+		setChanged();
+		notifyObservers(dt);
 	}
 
 	public void addUpload(User user, File file) throws IOException {

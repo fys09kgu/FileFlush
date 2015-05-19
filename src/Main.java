@@ -16,7 +16,7 @@ public class Main {
 		TransferMonitor transferMonitor = new TransferMonitor();
     	
         System.out.println("Creating Server Socket");
-        ServerThread server = new ServerThread(userMonitor);
+        ServerThread server = new ServerThread(userMonitor, transferMonitor);
         server.start();
         
         ListenFind listenFind = new ListenFind();

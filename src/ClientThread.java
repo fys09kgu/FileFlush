@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.Observable;
 
-public class ClientThread extends Observable implements Runnable {
+public class ClientThread extends Transfer implements Runnable {
 	Socket socket;
 	File file;
 	private long uploaded;
@@ -60,7 +60,7 @@ public class ClientThread extends Observable implements Runnable {
 		return this.file.length();
 	}
 
-	public int getProgress() {		
+	public int getProgress() {
 		return (int) ((double) uploaded/(double) getFilesize() * 100);
 	}
 }
