@@ -32,6 +32,7 @@ public class ServerThread extends Thread {
 				switch (type) {
 				case Header.TYPE_FILE:
 					FileMetadata metadata = header.parseFileMetadata();
+					metadata.setDirectory(userMonitor.getDirectory());
 					System.out.println(String.format("Filename: %s | filesize: %s",
 							metadata.getFilename(), metadata.getFilesize()));
 					DownloadThread downloader = new DownloadThread(metadata, in);

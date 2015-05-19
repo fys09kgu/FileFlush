@@ -15,6 +15,7 @@ import javax.swing.JList;
 import javax.swing.JButton;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Observer;
@@ -29,6 +30,7 @@ import javax.swing.JMenuItem;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
@@ -80,6 +82,11 @@ public class FileFlushGUI extends JFrame {
 		JMenuItem mntmTracker = new JMenuItem("Tracker");
 		mntmTracker.addActionListener(new SettingsTrackerDialog(userMonitor));
 		mnSettings.add(mntmTracker);
+		
+		JMenuItem mntmDirectory = new JMenuItem("Directory");
+		mntmDirectory.addActionListener(new SettingsDirectoryDialog(userMonitor));
+		mnSettings.add(mntmDirectory);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -187,6 +194,33 @@ public class FileFlushGUI extends JFrame {
 		            JOptionPane.QUESTION_MESSAGE);
 			String[] data = response.split(":");
 			userMonitor.setTrackerAddress(data[0].trim(), Integer.parseInt(data[1].trim()));
+		}
+	}
+	
+	private final class SettingsDirectoryDialog implements ActionListener {
+		private UserMonitor userMonitor;
+
+		public SettingsDirectoryDialog(UserMonitor userMonitor) {
+			this.userMonitor = userMonitor;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			String response = (String) JOptionPane.showInputDialog(null,
+		            "Directory",
+		            "Change download directory",
+		            JOptionPane.QUESTION_MESSAGE, null, null, userMonitor.getDirectory());
+			if (response != null) {
+				File directory = new File(response.trim());
+				if (!directory.isDirectory()) {
+					int dialogResult = JOptionPane.showConfirmDialog(null,
+									"The directory" + directory.getAbsolutePath() + " does not exist. Do you want to create it?",
+									"Warning", JOptionPane.YES_NO_OPTION);
+					if (dialogResult == JOptionPane.YES_OPTION){
+						directory.mkdir();
+						userMonitor.setDirectory(directory);
+					}
+				}
+			}
 		}
 	}
 }

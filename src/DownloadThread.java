@@ -18,7 +18,7 @@ public class DownloadThread extends Thread {
 		byte[] buffer = new byte[8192];
 		int dataLength = 0;
 		try {
-			out = new FileOutputStream(new File("testner", metadata.getFilename()));
+			out = new FileOutputStream(new File(metadata.getDirectory(), metadata.getFilename()));
 			while((dataLength = inputStream.read(buffer, 0, buffer.length)) > 0) {
 				out.write(buffer, 0, dataLength);
 			}

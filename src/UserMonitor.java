@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.HashSet;
 import java.util.Observable;
 
@@ -6,10 +7,12 @@ public class UserMonitor extends Observable{
 	private User owner;
 	private int trackerPort = 50001;
 	private String trackerHost = "localhost";
+	private File directory;
 	
 	public UserMonitor(User owner) {
 		users = new HashSet<User>();
 		this.owner = owner;
+		directory = new File("testner");
 	}
 
 	public HashSet<User> getUsers() {
@@ -56,5 +59,13 @@ public class UserMonitor extends Observable{
 		
 		setChanged();
 		notifyObservers("Server");
+	}
+
+	public File getDirectory() {
+		return directory;
+	}
+	
+	public void setDirectory(File directory) {
+		this.directory = directory;
 	}
 }
