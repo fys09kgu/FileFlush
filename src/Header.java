@@ -6,6 +6,8 @@ import java.net.SocketException;
 public class Header {
 	public static final int TYPE_FILE = 0;
 	public static final int TYPE_USER = 1;
+	public static final int NO_ACCEPT = 2;
+	public static final int ACCEPT = 3;
 	
 	private BufferedInputStream inputStream;
 	private String[] header;

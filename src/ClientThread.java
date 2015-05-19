@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.Observable;
 
 public class ClientThread extends Transfer implements Runnable {
 	Socket socket;
@@ -28,15 +27,18 @@ public class ClientThread extends Transfer implements Runnable {
 			os = new BufferedOutputStream(socket.getOutputStream());
 			
 			os.write(Header.createFileHeader(new FileMetadata(file.getName(), file.length())));
-			
-			BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
-			int count;
-			while ((count = fis.read(buffer)) > 0){
-				os.write(buffer, 0, count);
-				increaseUploadSize(count);
-			}
 			os.flush();
-			fis.close();
+			
+			if (is.read() == Header.ACCEPT) {
+				BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
+				int count;
+				while ((count = fis.read(buffer)) > 0){
+					os.write(buffer, 0, count);
+					increaseUploadSize(count);
+				}
+				os.flush();
+				fis.close();
+			}
 			is.close();
 			os.close();
 			socket.close();

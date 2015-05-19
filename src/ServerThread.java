@@ -37,7 +37,7 @@ public class ServerThread extends Thread {
 					metadata.setDirectory(userMonitor.getDirectory());
 					System.out.println(String.format("Filename: %s | filesize: %s",
 							metadata.getFilename(), metadata.getFilesize()));
-					DownloadThread dt = new DownloadThread(metadata, in);
+					DownloadThread dt = new DownloadThread(metadata, connectionSocket);
 					transferMonitor.addDownload(dt);
 					break;
 				case Header.TYPE_USER:

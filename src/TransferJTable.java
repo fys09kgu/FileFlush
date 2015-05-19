@@ -23,16 +23,17 @@ public class TransferJTable extends JTable implements Observer {
 			int dialogResult = JOptionPane.showConfirmDialog(null,
 					"Do you want to download this file?",
 					"Warning", JOptionPane.YES_NO_OPTION);
+			DownloadThread dt = (DownloadThread) object;
 			if (dialogResult == JOptionPane.YES_OPTION){
 				System.out.println("yes");
-				DownloadThread dt = (DownloadThread) object;
+				dt.setDownload(true);
 				TransferTableModel model = (TransferTableModel) getModel();
 				dt.addObserver(model);
 				model.addTransfer(dt);
-				new Thread(dt).start();
 			} else {
-				System.out.println("no");
+				dt.setDownload(false);
 			}
+			new Thread(dt).start();
 		}
 	}
 }
