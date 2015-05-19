@@ -24,7 +24,6 @@ public class TransferJTable extends JTable implements Observer {
 					"Warning", JOptionPane.YES_NO_OPTION);
 			DownloadThread dt = (DownloadThread) object;
 			if (dialogResult == JOptionPane.YES_OPTION){
-				System.out.println("yes");
 				dt.setDownload(true);
 				TransferTableModel model = (TransferTableModel) getModel();
 				dt.addObserver(model);
