@@ -23,8 +23,4 @@ public class TransferMonitor extends Observable {
 		setChanged();
 		notifyObservers(ut);
 	}
-
-	public int getTotalTransfers() {
-		return uploads.size();
-	}
 }

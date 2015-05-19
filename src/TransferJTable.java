@@ -12,7 +12,6 @@ public class TransferJTable extends JTable implements Observer {
 
 	@Override
 	public void update(Observable observable, Object object) {
-		TransferMonitor transferMonitor = (TransferMonitor) observable;
 		if (object instanceof UploadThread) {
 			UploadThread ut = (UploadThread) object;
 			TransferTableModel model = (TransferTableModel) getModel();
