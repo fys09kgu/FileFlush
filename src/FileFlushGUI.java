@@ -172,11 +172,13 @@ public class FileFlushGUI extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			String response = JOptionPane.showInputDialog(null,
+			String response = (String) JOptionPane.showInputDialog(null,
 		            "Username",
 		            "Change username",
-		            JOptionPane.QUESTION_MESSAGE);
-			userMonitor.getOwner().setUsername(response);
+		            JOptionPane.QUESTION_MESSAGE, null, null, userMonitor.getOwner().getUsername());
+			if (response != null) {
+				userMonitor.getOwner().setUsername(response.trim());
+			}
 		}
 	}
 
@@ -188,12 +190,14 @@ public class FileFlushGUI extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			String response = JOptionPane.showInputDialog(null,
+			String response = (String) JOptionPane.showInputDialog(null,
 		            "Address <address:port>",
 		            "Change tracker address",
-		            JOptionPane.QUESTION_MESSAGE);
-			String[] data = response.split(":");
-			userMonitor.setTrackerAddress(data[0].trim(), Integer.parseInt(data[1].trim()));
+		            JOptionPane.QUESTION_MESSAGE, null, null, String.format("%s:%d", userMonitor.getTrackerHost(), userMonitor.getTrackerPort()));
+			if (response != null) {
+				String[] data = response.split(":");
+				userMonitor.setTrackerAddress(data[0].trim(), Integer.parseInt(data[1].trim()));
+			}
 		}
 	}
 	
