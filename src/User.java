@@ -15,9 +15,7 @@ public class User {
 	}
 	
 	public User(InetAddress address, int port) {
-		this.address = address;
-		this.port = port;
-		this.username = "";
+		this(address, port, "");
 	}
 	
 	public void setUsername(String username) {

@@ -8,8 +8,7 @@ import java.util.Observer;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 
-
-public class UserJList extends JList implements Observer{
+public class UserJList extends JList<Object> implements Observer{
 	
 	User[] users;
 	

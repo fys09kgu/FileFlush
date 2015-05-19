@@ -1,6 +1,5 @@
 import java.io.File;
 
-
 public class FileMetadata {
 	
 	private String filename;

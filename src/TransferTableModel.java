@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-
 public class TransferTableModel extends AbstractTableModel implements Observer {
 	private Vector data = new Vector();
 	private String[] columnNames = new String[] {"Filename", "Progress"};

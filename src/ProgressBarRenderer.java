@@ -3,7 +3,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-
 public class ProgressBarRenderer extends DefaultTableCellRenderer {
 	private JProgressBar bar = new JProgressBar();
 	

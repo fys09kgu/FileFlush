@@ -4,7 +4,6 @@ import java.util.Observer;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
-
 public class TransferJTable extends JTable implements Observer {
 	public TransferJTable() {
 		setModel(new TransferTableModel());

@@ -1,20 +1,15 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Color;
-
 import javax.swing.JList;
 import javax.swing.JButton;
 
-import java.awt.Dimension;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,14 +22,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
-
 
 public class FileFlushGUI extends JFrame {
 	private JPanel contentPane;
@@ -45,7 +37,7 @@ public class FileFlushGUI extends JFrame {
 	 * @throws UnknownHostException 
 	 */
 	public static void main(String[] args) throws UnknownHostException {
-		User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT, "");
+		User owner = new User(InetAddress.getLocalHost(), ServerThread.SERVER_PORT);
 		final UserMonitor um = new UserMonitor(owner);
 		final TransferMonitor tm = new TransferMonitor();
 		EventQueue.invokeLater(new Runnable() {
@@ -117,25 +109,6 @@ public class FileFlushGUI extends JFrame {
 		gbc_userList.gridx = 0;
 		gbc_userList.gridy = 0;
 		contentPane.add(userList, gbc_userList);
-//		
-//		TransferPanel transferPanel = new TransferPanel();
-//		transferMonitor.addObserver((Observer) transferPanel);
-//		transferPanel.setPreferredSize(new Dimension(10, 300));
-//		transferPanel.setMinimumSize(new Dimension(10, 300));
-//		transferPanel.setBackground(Color.WHITE);
-//		GridBagConstraints gbc_transferPanel = new GridBagConstraints();
-//		gbc_transferPanel.gridheight = 3;
-//		gbc_transferPanel.insets = new Insets(0, 0, 5, 0);
-//		gbc_transferPanel.fill = GridBagConstraints.BOTH;
-//		gbc_transferPanel.gridx = 1;
-//		gbc_transferPanel.gridy = 0;
-//		contentPane.add(transferPanel, gbc_transferPanel);
-//		GridBagLayout gbl_transferPanel = new GridBagLayout();
-//		gbl_transferPanel.columnWidths = new int[] {150, 250, 0};
-//		gbl_transferPanel.rowHeights = new int[]{0, 0, 0, 0};
-//		gbl_transferPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-//		gbl_transferPanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-//		transferPanel.setLayout(gbl_transferPanel);
 		
 		JButton btnFindUsers = new JButton("Find users");
 		btnFindUsers.addActionListener(new FindButtonListener(userMonitor));
