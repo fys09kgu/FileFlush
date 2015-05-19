@@ -11,6 +11,10 @@ public class FileMetadata {
 		this.filesize = filesize;
 	}
 
+	public FileMetadata(File file) {
+		this(file.getName(), file.length());
+	}
+
 	public String getFilename() {
 		return filename;
 	}

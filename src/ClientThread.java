@@ -26,7 +26,7 @@ public class ClientThread extends Transfer implements Runnable {
 			is = socket.getInputStream();
 			os = new BufferedOutputStream(socket.getOutputStream());
 			
-			os.write(Header.createFileHeader(new FileMetadata(file.getName(), file.length())));
+			os.write(Header.createFileHeader(new FileMetadata(file)));
 			os.flush();
 			
 			if (is.read() == Header.ACCEPT) {
