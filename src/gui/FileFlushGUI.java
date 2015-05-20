@@ -167,7 +167,7 @@ public class FileFlushGUI extends JFrame {
 			String response = (String) JOptionPane.showInputDialog(null,
 		            "Directory",
 		            "Change download directory",
-		            JOptionPane.QUESTION_MESSAGE, null, null, userMonitor.getDirectory());
+		            JOptionPane.QUESTION_MESSAGE, null, null, userMonitor.getDirectory().getAbsoluteFile());
 			if (response != null) {
 				File directory = new File(response.trim());
 				if (!directory.isDirectory()) {
