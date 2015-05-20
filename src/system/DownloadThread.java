@@ -9,7 +9,6 @@ public class DownloadThread extends Transfer implements Runnable {
 
 	private Socket socket;
 	private FileMetadata metadata;
-	private double downloaded;
 	private boolean download;
 
 	public DownloadThread(FileMetadata metadata, Socket connectionSocket) {
@@ -52,7 +51,7 @@ public class DownloadThread extends Transfer implements Runnable {
 	}
 
 	private void increaseDownloadSize(int size) {
-		downloaded += size;
+		transfered += size;
 		setChanged();
 		notifyObservers(this);
 	}
@@ -68,11 +67,6 @@ public class DownloadThread extends Transfer implements Runnable {
 
 	public long getFilesize() {
 		return metadata.getFilesize();
-	}
-
-	@Override
-	public int getProgress() {
-		return (int) ((double) downloaded/(double) getFilesize() * 100);
 	}
 
 	public void setDownload(boolean download) {

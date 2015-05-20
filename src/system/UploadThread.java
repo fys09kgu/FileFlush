@@ -10,12 +10,10 @@ import java.net.Socket;
 public class UploadThread extends Transfer implements Runnable {
 	Socket socket;
 	File file;
-	private long uploaded;
 
 	public UploadThread(Socket socket, File file) {
 		this.socket = socket;
 		this.file = file;
-		this.uploaded = 0;
 	}
 
 	public void run(){
@@ -50,7 +48,7 @@ public class UploadThread extends Transfer implements Runnable {
 	}
 
 	private void increaseUploadSize(int size) {
-		uploaded += size;
+		transfered += size;
 		setChanged();
 		notifyObservers(this);
 	}
@@ -65,9 +63,5 @@ public class UploadThread extends Transfer implements Runnable {
 	
 	public long getFilesize() {
 		return this.file.length();
-	}
-
-	public int getProgress() {
-		return (int) ((double) uploaded/(double) getFilesize() * 100);
 	}
 }
