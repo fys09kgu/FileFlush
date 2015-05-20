@@ -22,8 +22,8 @@ class TrackerMaintainerServer implements Observer {
 	private TrackerServerThread server;
 	private ArrayList<TrackerClientConnection> clients;
 
-	public TrackerMaintainerServer() throws InterruptedException {
-		this.userMonitor = new UserMonitor(null);
+	public TrackerMaintainerServer(UserMonitor userMonitor) throws InterruptedException {
+		this.userMonitor = userMonitor;
 		this.clients = new ArrayList<TrackerClientConnection>();
 		
 		userMonitor.addObserver(this);

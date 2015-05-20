@@ -1,4 +1,7 @@
 package tracker;
+
+import system.UserMonitor;
+
 /**
  * @author alexander
  *
@@ -13,6 +16,6 @@ package tracker;
 public class TrackerMain {
 
 	public static void main(String[] args) throws InterruptedException {
-		new TrackerMaintainerServer();
+		new TrackerMaintainerServer(new UserMonitor(null));
 	}
 }
