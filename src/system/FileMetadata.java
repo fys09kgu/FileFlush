@@ -31,4 +31,8 @@ public class FileMetadata {
 	public File getDirectory() {
 		return directory;
 	}
+
+	public File getFile() {
+		return new File(getDirectory(), getFilename());
+	}
 }

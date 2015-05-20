@@ -1,6 +1,5 @@
 package system;
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,7 +28,7 @@ public class DownloadThread extends Transfer implements Runnable {
 			outputStream = socket.getOutputStream();
 			if (download) {
 				outputStream.write(Header.ACCEPT);
-				out = new FileOutputStream(new File(metadata.getDirectory(), metadata.getFilename()));
+				out = new FileOutputStream(metadata.getFile());
 				inputStream = new BufferedInputStream(socket.getInputStream());
 				while((dataLength = inputStream.read(buffer, 0, buffer.length)) > 0) {
 					out.write(buffer, 0, dataLength);
