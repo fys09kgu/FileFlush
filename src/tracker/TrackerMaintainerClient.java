@@ -53,6 +53,7 @@ public class TrackerMaintainerClient implements Observer{
 		private UserMonitor userMonitor;
 		private Socket socket;
 		private User owner;
+		private boolean closing = false;
 
 		/**
 		 * Initiates a client-to-tracker thread.
@@ -81,13 +82,12 @@ public class TrackerMaintainerClient implements Observer{
 				System.out.println("Tracker connection Established");
 				
 				// Parse incoming users
-				while(!socket.isClosed()){
+				while(!closing && !socket.isClosed()){
 					header.parseHeader();
 					if(header.getType() == 1){
 						userMonitor.addUser(header.parseUser());
 					}
 					else{
-						socket.close();
 						throw new IOException("Unexpected data");
 					}
 				}
@@ -101,10 +101,12 @@ public class TrackerMaintainerClient implements Observer{
 			catch (IOException e){
 				System.out.println(e.getMessage());
 			}
+			this.CloseConnection();
 		}
 		
 		public synchronized void CloseConnection(){
-			if (socket.isClosed()) return;
+			this.closing = true;
+			if (socket == null || socket.isClosed()) return;
 			else try {
 				socket.close();
 			} catch (IOException e) {}
