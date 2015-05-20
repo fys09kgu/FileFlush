@@ -17,7 +17,7 @@ import system.UserMonitor;
  * Manages the thread that accepts incoming connections from clients.
  * Also responsible for tracking active connections to the clients, and pushing updates to them.
  */
-class TrackerMaintainerServer implements Observer {
+public class TrackerMaintainerServer implements Observer {
 	private UserMonitor userMonitor;
 	private TrackerServerThread server;
 	private ArrayList<TrackerClientConnection> clients;

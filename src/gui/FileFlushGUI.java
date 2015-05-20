@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import system.Find;
 import system.TransferMonitor;
 import system.UserMonitor;
+import tracker.TrackerMaintainerServer;
 
 public class FileFlushGUI extends JFrame {
 	private JPanel contentPane;
@@ -60,6 +61,10 @@ public class FileFlushGUI extends JFrame {
 		JMenuItem mntmDirectory = new JMenuItem("Directory");
 		mntmDirectory.addActionListener(new SettingsDirectoryDialog(userMonitor));
 		mnSettings.add(mntmDirectory);
+		
+		JMenuItem mntmMyTracker = new JMenuItem("Start Local Tracker");
+		mntmMyTracker.addActionListener(new MyTrackerDialog(userMonitor));
+		mnSettings.add(mntmMyTracker);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -179,6 +184,28 @@ public class FileFlushGUI extends JFrame {
 						userMonitor.setDirectory(directory);
 					}
 				}
+			}
+		}
+	}
+	
+	private static final class MyTrackerDialog implements ActionListener {
+		private UserMonitor userMonitor;
+		private tracker.TrackerMaintainerServer trackingServer;
+
+		public MyTrackerDialog(UserMonitor userMonitor) {
+			this.userMonitor = userMonitor;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			try {
+				if (this.trackingServer == null) {
+					this.trackingServer = new TrackerMaintainerServer(this.userMonitor);
+				}
+				else{
+					System.out.println("Tracker already on");
+				}
+			} catch (InterruptedException e1) {
+				return;
 			}
 		}
 	}
