@@ -22,7 +22,7 @@ public class TrackerMaintainerServer implements Observer {
 	private TrackerServerThread server;
 	private ArrayList<TrackerClientConnection> clients;
 
-	public TrackerMaintainerServer(UserMonitor userMonitor) throws InterruptedException {
+	public TrackerMaintainerServer(final UserMonitor userMonitor) throws InterruptedException {
 		this.userMonitor = userMonitor;
 		this.clients = new ArrayList<TrackerClientConnection>();
 		
@@ -33,11 +33,18 @@ public class TrackerMaintainerServer implements Observer {
 		
 		System.out.println("Tracker Online");
 		
-		while(server.isAlive()){
-			Thread.sleep(5000);
-			System.out.println("Known Users: " + userMonitor.getUsers().size() + "/" + clients.size());
-		}
-		System.exit(0);
+		Thread status = new Thread(){
+			public void run()
+			{
+				while(server.isAlive()){
+					try {
+						Thread.sleep(5000);
+						System.out.println("Known Users: " + userMonitor.getUsers().size() + "/" + clients.size());
+					} catch (InterruptedException e) {}
+				}
+			}
+		};
+		status.start();
 	}
 
 	@Override
