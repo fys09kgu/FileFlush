@@ -22,7 +22,7 @@ public class TrackerMaintainerServer implements Observer {
 	private TrackerServerThread server;
 	private ArrayList<TrackerClientConnection> clients;
 
-	public TrackerMaintainerServer(final UserMonitor userMonitor) throws InterruptedException {
+	public TrackerMaintainerServer(UserMonitor userMonitor) throws InterruptedException {
 		this.userMonitor = userMonitor;
 		this.clients = new ArrayList<TrackerClientConnection>();
 		
@@ -156,6 +156,9 @@ public class TrackerMaintainerServer implements Observer {
 			try {
 				BufferedInputStream in = new BufferedInputStream(connectionSocket.getInputStream());
 				os = new BufferedOutputStream(connectionSocket.getOutputStream());
+				if (this.userMonitor.getOwner()!= null){
+					SendUser(this.userMonitor.getOwner());
+				}
 				
 				Header header = new Header(in);
 				try {

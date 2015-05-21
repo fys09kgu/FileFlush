@@ -23,20 +23,17 @@ public class TrackerMaintainerClient implements Observer{
 	UserMonitor userMonitor;
 	User owner;
 	
-	public TrackerMaintainerClient(UserMonitor userMonitor, User owner){
+	public TrackerMaintainerClient(UserMonitor userMonitor){
 		this.userMonitor = userMonitor;
-		this.owner = owner;
 		
-		track = new TrackerClientThread(userMonitor, owner);
-    	track.start();
     	userMonitor.addObserver(this);
 	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg.getClass() == String.class && (String) arg == "Server"){
-			if (track.isAlive()) track.CloseConnection();
-			track = new TrackerClientThread(userMonitor, owner);
+			if (track != null && track.isAlive()) track.CloseConnection();
+			track = new TrackerClientThread(userMonitor);
 	    	track.start();
 		}
 	}
@@ -52,7 +49,6 @@ public class TrackerMaintainerClient implements Observer{
 
 		private UserMonitor userMonitor;
 		private Socket socket;
-		private User owner;
 		private boolean closing = false;
 
 		/**
@@ -61,9 +57,8 @@ public class TrackerMaintainerClient implements Observer{
 		 * @param userMonitor The local UserMonitor.
 		 * @param owner 
 		 */
-		public TrackerClientThread(UserMonitor userMonitor, User owner) {
+		public TrackerClientThread(UserMonitor userMonitor) {
 			this.userMonitor = userMonitor;
-			this.owner = owner;
 		}
 
 		public void run() {
@@ -76,7 +71,7 @@ public class TrackerMaintainerClient implements Observer{
 				os = new BufferedOutputStream(socket.getOutputStream());
 				Header header = new Header(new BufferedInputStream(socket.getInputStream()));
 				
-				os.write(Header.createUserHeader(owner));
+				os.write(Header.createUserHeader(userMonitor.getOwner()));
 				os.flush();
 				
 				System.out.println("Tracker connection Established");

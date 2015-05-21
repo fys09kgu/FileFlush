@@ -29,7 +29,7 @@ public class FileFlush {
         FileFlushGUI gui = new FileFlushGUI(userMonitor, transferMonitor);
         gui.setVisible(true);
         
-        new TrackerMaintainerClient(userMonitor, owner);
+        new TrackerMaintainerClient(userMonitor);
         
         System.out.println("Specify: host port filePath");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
