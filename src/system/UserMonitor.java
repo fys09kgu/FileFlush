@@ -21,9 +21,12 @@ public class UserMonitor extends Observable{
 	}
 	
 	public synchronized void addUser(User u) {
-		users.add(u);
-		setChanged();
-		notifyObservers(u);
+		if(u.equals(this.owner)) return;
+		else{
+			users.add(u);
+			setChanged();
+			notifyObservers(u);
+		}
 	}
 	
 	public synchronized void removeUser(User u) {
