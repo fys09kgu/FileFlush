@@ -1,12 +1,16 @@
 package tracker;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import system.Header;
 import system.User;
@@ -20,15 +24,19 @@ import system.UserMonitor;
 public class TrackerMaintainerServer implements Observer {
 	private UserMonitor userMonitor;
 	private TrackerServerThread server;
-	private ArrayList<TrackerClientConnection> clients;
+	private ThreadPoolExecutor executor;
+	private BlockingQueue<Runnable> clients; // Holds only TrackerClientConnection
 
 	public TrackerMaintainerServer(final UserMonitor userMonitor) throws InterruptedException {
 		this.userMonitor = userMonitor;
-		this.clients = new ArrayList<TrackerClientConnection>();
 		
-		userMonitor.addObserver(this);
+		clients = new ArrayBlockingQueue<Runnable>(110);
+		
+		this.executor = new ThreadPoolExecutor(2, 100, 0, TimeUnit.SECONDS, clients);
+		
+		this.userMonitor.addObserver(this);
 
-		server = new TrackerServerThread(userMonitor, clients);
+		server = new TrackerServerThread(userMonitor, executor);
 		server.start();
 		
 		System.out.println("Tracker Online");
@@ -39,7 +47,7 @@ public class TrackerMaintainerServer implements Observer {
 				while(server.isAlive()){
 					try {
 						Thread.sleep(5000);
-						System.out.println("Known Users: " + userMonitor.getUsers().size() + "/" + clients.size());
+						System.out.println("Known Users: " + userMonitor.getUsers().size() + "/" + (clients.size()+executor.getPoolSize()));
 					} catch (InterruptedException e) {}
 				}
 			}
@@ -69,12 +77,12 @@ public class TrackerMaintainerServer implements Observer {
 	 * @param user User to send
 	 */
 	public void SendUser(User user) {
-		for (TrackerClientConnection conn : clients){
+		for (Runnable conn : clients){
 			// Skip sending updates on a user to that user.
-			if (conn.getUser().equals(user)) continue;
+			if (((TrackerClientConnection) conn).getUser().equals(user)) continue;
 			
 			try {
-				conn.SendUser(user);
+				((TrackerClientConnection) conn).SendUser(user);
 			} catch (IOException e) {
 				System.out.println("A connection error occured.");
 				continue;
@@ -93,11 +101,11 @@ public class TrackerMaintainerServer implements Observer {
 	private class TrackerServerThread extends Thread {
 		public static final int SERVER_PORT = 50001;
 		private UserMonitor userMonitor;
-		private ArrayList<TrackerClientConnection> clients;
+		private ThreadPoolExecutor executor;
 
-		public TrackerServerThread(UserMonitor userMonitor, ArrayList<TrackerClientConnection> clients) {
+		public TrackerServerThread(UserMonitor userMonitor, ThreadPoolExecutor executor) {
 			this.userMonitor = userMonitor;
-			this.clients = clients;
+			this.executor = executor;
 		}
 
 		public void run() {
@@ -107,16 +115,15 @@ public class TrackerMaintainerServer implements Observer {
 				Socket connectionSocket = null;
 				while (true) {
 					connectionSocket = serverIn.accept();
-					TrackerClientConnection conn = new TrackerClientConnection(connectionSocket, userMonitor, clients);
-					this.clients.add(conn);
-					conn.start();
+					TrackerClientConnection conn = new TrackerClientConnection(connectionSocket, userMonitor);
+					this.executor.execute(conn);
 				}
 			} catch (IOException e) {
 				
 			} finally {
 				try {
-					for (TrackerClientConnection conn : this.clients){
-						conn.Terminate();
+					for (Runnable conn : this.executor.getQueue()){
+						((TrackerClientConnection) conn).Terminate();
 					}
 					serverIn.close();
 				} catch (IOException e) {
@@ -130,12 +137,11 @@ public class TrackerMaintainerServer implements Observer {
 	 *	Represents a connection to a client.
 	 *	Is responsible for I/O to a client.
 	 */
-	private class TrackerClientConnection extends Thread {
+	private class TrackerClientConnection implements Runnable {
 		private User user;
 		private UserMonitor userMonitor;
 		private Socket connectionSocket;
 		private BufferedOutputStream os;
-		private ArrayList<TrackerClientConnection> clients;
 
 		/**
 		 * Initializes a client connection from an existing socket.
@@ -145,10 +151,9 @@ public class TrackerMaintainerServer implements Observer {
 		 * @param userMonitor	The UserMonitor object that keeps a record of users.
 		 * @param clients	The List of Clients tracked by the server.
 		 */
-		public TrackerClientConnection(Socket connectionSocket, UserMonitor userMonitor, ArrayList<TrackerClientConnection> clients) {
+		public TrackerClientConnection(Socket connectionSocket, UserMonitor userMonitor) {
 			this.connectionSocket = connectionSocket;
 			this.userMonitor = userMonitor;
-			this.clients = clients;
 			System.out.println("New connection:" + connectionSocket.getInetAddress() + ":" + connectionSocket.getPort());
 		}
 		
@@ -181,11 +186,9 @@ public class TrackerMaintainerServer implements Observer {
 				while(in.read() != -1); // -1 is sent to FIN connection
 				connectionSocket.close();
 				
-			} catch (IOException e) {
-			} finally {
-				clients.remove(this);
-				this.userMonitor.removeUser(this.user);
-			}
+			} catch (IOException e) {}
+
+			if (this.user != null) this.userMonitor.removeUser(this.user);
 			System.out.println("Connection to a client was terminated.");
 		}
 
@@ -197,6 +200,7 @@ public class TrackerMaintainerServer implements Observer {
 		synchronized public void SendAllUsers() throws IOException {
 			for (User u : userMonitor.getUsers()) {
 				os.write(Header.createUserHeader(u));
+				os.flush();
 			}
 			os.flush();
 		}
