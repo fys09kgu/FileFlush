@@ -13,7 +13,8 @@ public class UserMonitor extends Observable{
 	public UserMonitor(User owner) {
 		users = new HashSet<User>();
 		this.owner = owner;
-		directory = new File("testner");
+		directory = new File("FileFlush Downloads");
+		directory.mkdir();
 	}
 
 	public HashSet<User> getUsers() {
