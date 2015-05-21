@@ -11,6 +11,8 @@ import javax.swing.JList;
 import javax.swing.JButton;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Observer;
 
 import javax.swing.AbstractListModel;
@@ -54,13 +56,17 @@ public class FileFlushGUI extends JFrame {
 		mntmUsername.addActionListener(new SettingsUsernameDialog(userMonitor));
 		mnSettings.add(mntmUsername);
 		
-		JMenuItem mntmTracker = new JMenuItem("Tracker");
-		mntmTracker.addActionListener(new SettingsTrackerDialog(userMonitor));
-		mnSettings.add(mntmTracker);
-		
 		JMenuItem mntmDirectory = new JMenuItem("Directory");
 		mntmDirectory.addActionListener(new SettingsDirectoryDialog(userMonitor));
 		mnSettings.add(mntmDirectory);
+		
+		JMenuItem mntmManualUser = new JMenuItem("Add User");
+		mntmManualUser.addActionListener(new SettingsManualUserDialog(userMonitor));
+		mnSettings.add(mntmManualUser);
+		
+		JMenuItem mntmTracker = new JMenuItem("Tracker");
+		mntmTracker.addActionListener(new SettingsTrackerDialog(userMonitor));
+		mnSettings.add(mntmTracker);
 		
 		JMenuItem mntmMyTracker = new JMenuItem("Start Local Tracker");
 		mntmMyTracker.addActionListener(new MyTrackerDialog(userMonitor));
@@ -138,6 +144,35 @@ public class FileFlushGUI extends JFrame {
 		            JOptionPane.QUESTION_MESSAGE, null, null, userMonitor.getOwner().getUsername());
 			if (response != null) {
 				userMonitor.getOwner().setUsername(response.trim());
+			}
+		}
+	}
+	
+
+	private final class SettingsManualUserDialog implements ActionListener {
+		private UserMonitor userMonitor;
+
+		public SettingsManualUserDialog(UserMonitor userMonitor) {
+			this.userMonitor = userMonitor;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			String response = (String) JOptionPane.showInputDialog(null,
+		            "Address <address:port>",
+		            "Manually add a user",
+		            JOptionPane.QUESTION_MESSAGE, null, null, String.format("%s:%d", userMonitor.getOwner().getIPAddress(), userMonitor.getOwner().getPort()));
+			if (response != null) {
+				String[] data = response.split(":");
+				try {
+					userMonitor.addUser(new system.User(
+							InetAddress.getByName(data[0].trim()),
+							Integer.parseInt(data[1].trim()),
+							"(Manually Added)")
+					);
+				} catch (NumberFormatException | UnknownHostException e1) {
+					System.out.println("Failed to resolve manual user details");
+					return;
+				}
 			}
 		}
 	}
